@@ -3,16 +3,44 @@
 import React, { Component } from 'react'
 import { drawRelatively } from './camera'
 
-const backgroundEntities = []
+const draw = (context, x, y) => {
+	context.beginPath()
+	context.moveTo(x, y)
+	context.lineTo(x + 20, y)
+	context.lineTo(x + 20, y + 20)
+	context.lineTo(x, y + 20)
+	context.closePath()
+	context.fillStyle = '#ffa'
+	context.fill()
+}
+
+const backgroundEntities = [
+	{
+		x: -10,
+		y: -10,
+		width: 120,
+		height: 120,
+		draw: (context, x, y) => {
+			context.beginPath()
+			context.moveTo(x, y)
+			context.lineTo(x + 120, y)
+			context.lineTo(x + 120, y + 120)
+			context.lineTo(x, y + 120)
+			context.closePath()
+			context.fillStyle = 'rgba(255,255,255,0.01)'
+			context.fill()
+		},
+	},
+]
 const indestructibleEntities = [
-	{ x: 0, y: 0, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#ffa'; context.fill() } },
-	{ x: 10, y: 10, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#faf'; context.fill() } },
-	{ x: 20, y: 20, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#aff'; context.fill() } },
-	{ x: 30, y: 50, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#ff8'; context.fill() } },
-	{ x: 40, y: 80, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#f8f'; context.fill() } },
-	{ x: 50, y: 20, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#8ff'; context.fill() } },
-	{ x: 60, y: 50, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#ff0'; context.fill() } },
-	{ x: 70, y: 10, draw: (context, x, y) => { context.beginPath(); context.moveTo(x - 10, y - 10); context.lineTo(x + 10, y + 10); context.lineTo(x - 10, y + 10); context.closePath(); context.fillStyle = '#f0f'; context.fill() } },
+	{ x: 0, y: 0, width: 20, height: 20, draw },
+	{ x: 10, y: 10, width: 20, height: 20, draw },
+	{ x: 20, y: 20, width: 20, height: 20, draw },
+	{ x: 30, y: 50, width: 20, height: 20, draw },
+	{ x: 40, y: 80, width: 20, height: 20, draw },
+	{ x: 50, y: 20, width: 20, height: 20, draw },
+	{ x: 60, y: 50, width: 20, height: 20, draw },
+	{ x: 70, y: 10, width: 20, height: 20, draw },
 ]
 const destructibleEntities = []
 const enemyEntities = []

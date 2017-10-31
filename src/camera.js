@@ -1,13 +1,5 @@
 // @flow
 
-/**
- * param: entities Array of objects, with at least attributes:
- *   x   : number
- *   y   : number
- *   draw: function (context, x, y) => void
- *
- */
-
 import type { Entity } from './flowTypes'
 
 export const drawRelatively = (
@@ -20,12 +12,23 @@ export const drawRelatively = (
 	x: number, // x-coordinate at which to begin to draw
 	y: number, // y-coordinate at which to begin to draw
 ): void => {
-	context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+	if (entities.length === 0) return
 
+	context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+	context.strokeRect(0, 0, drawWidth, drawHeight) // camera view area
 	entities.forEach(entity => {
 		if (
-			entity.x >= x && entity.y >= y &&
-			entity.x <= x + drawWidth && entity.y <= y + drawHeight
+			(
+				entity.x + entity.width >= x &&
+				entity.y + entity.height >= y &&
+				entity.x <= x + drawWidth &&
+				entity.y <= y + drawHeight
+			) || (
+				// for entities bigger than the camera draw area
+				(entity.width > drawWidth && entity.height > drawHeight) &&
+				(entity.x < x && entity.y < x) &&
+				(entity.x + entity.width > drawWidth && entity.y + entity.height > drawHeight)
+			)
 		) {
 			entity.draw(context, entity.x - x, entity.y - y)
 		}
