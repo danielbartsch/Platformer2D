@@ -30,14 +30,14 @@ class App extends Component<{}, State> {
 				onKeyUp={this.handleKeyUp}
 				className={styles.app}
 			>
-				<div className={styles.pressedKeys}>
-					{pressedKeys}
-				</div>
 				<Game
 					pressedKeys={pressedKeys}
 					width={900}
 					height={600}
 				/>
+				<div className={styles.pressedKeys}>
+					{pressedKeys}
+				</div>
 			</div>
 		)
 	}

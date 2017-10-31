@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { drawRelatively } from './camera'
+import styles from './App.css'
 
 const draw = (context, x, y) => {
 	context.beginPath()
@@ -118,7 +119,7 @@ export default class Game extends Component<Props> {
 		return (
 			<div>
 				<canvas
-					style={{ position: 'absolute' }}
+					className={styles.canvas}
 					width={width}
 					height={height}
 					ref={ref => { this.canvasBackgroundContext = ref && ref.getContext('2d') }}
@@ -126,7 +127,7 @@ export default class Game extends Component<Props> {
                     Background Canvas
 				</canvas>
 				<canvas
-					style={{ position: 'absolute' }}
+					className={styles.canvas}
 					width={width}
 					height={height}
 					ref={ref => { this.canvasIndestructiblesContext = ref && ref.getContext('2d') }}
@@ -134,7 +135,7 @@ export default class Game extends Component<Props> {
                     Indestructibles Canvas
 				</canvas>
 				<canvas
-					style={{ position: 'absolute' }}
+					className={styles.canvas}
 					width={width}
 					height={height}
 					ref={ref => { this.canvasDestructiblesContext = ref && ref.getContext('2d') }}
@@ -142,7 +143,7 @@ export default class Game extends Component<Props> {
                     Destructibles Canvas
 				</canvas>
 				<canvas
-					style={{ position: 'absolute' }}
+					className={styles.canvas}
 					width={width}
 					height={height}
 					ref={ref => { this.canvasEnemiesContext = ref && ref.getContext('2d') }}
@@ -150,7 +151,7 @@ export default class Game extends Component<Props> {
                     Enemies Canvas
 				</canvas>
 				<canvas
-					style={{ position: 'absolute' }}
+					className={styles.canvas}
 					width={width}
 					height={height}
 					ref={ref => { this.canvasMainCharContext = ref && ref.getContext('2d') }}
@@ -158,7 +159,7 @@ export default class Game extends Component<Props> {
                     MainChar Canvas
 				</canvas>
 				<canvas
-					style={{ position: 'absolute' }}
+					className={styles.canvas}
 					width={width}
 					height={height}
 					ref={ref => { this.canvasEffectsContext = ref && ref.getContext('2d') }}
