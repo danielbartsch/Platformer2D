@@ -19,9 +19,10 @@ const enemyEntities = []
 const mainCharacter = []
 const effectEntities = []
 
-let run = 0
+let cameraX = 0
+let cameraY = 0
 
-type Props = { width: number, height: number }
+type Props = { width: number, height: number, pressedKeys: Array<string> }
 
 export default class Game extends Component<Props> {
 	canvasBackgroundContext: ?CanvasRenderingContext2D
@@ -35,6 +36,18 @@ export default class Game extends Component<Props> {
 	props: Props
 
 	gameFrame = () => {
+		if (this.props.pressedKeys.includes('w')) {
+			cameraY--
+		}
+		if (this.props.pressedKeys.includes('s')) {
+			cameraY++
+		}
+		if (this.props.pressedKeys.includes('a')) {
+			cameraX--
+		}
+		if (this.props.pressedKeys.includes('d')) {
+			cameraX++
+		}
 		[
 			[this.canvasBackgroundContext, backgroundEntities],
 			[this.canvasIndestructiblesContext, indestructibleEntities],
@@ -51,8 +64,8 @@ export default class Game extends Component<Props> {
 					this.props.height,
 					100,
 					100,
-					30 + (Math.cos(run += 0.01) * 40),
-					30 + (Math.cos(run += 0.01) * 40),
+					cameraX,
+					cameraY,
 				)
 			}
 		})

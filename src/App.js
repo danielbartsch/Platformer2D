@@ -31,7 +31,7 @@ class App extends Component<{}, State> {
 	}
 
 	render() {
-		const pressedKeys = toPairs(this.state).filter(([, value]) => value)
+		const pressedKeys = toPairs(this.state).filter(([, value]) => value).map(([key]) => key)
 
 		return (
 			<div
