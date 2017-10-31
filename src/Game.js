@@ -24,6 +24,16 @@ let cameraY = 0
 
 type Props = { width: number, height: number, pressedKeys: Array<string> }
 
+let gamePad = null
+
+window.addEventListener('gamepadconnected', event => {
+	gamePad = event.gamepad
+})
+
+window.addEventListener('gamepaddisconnected', () => {
+	gamePad = null
+})
+
 export default class Game extends Component<Props> {
 	canvasBackgroundContext: ?CanvasRenderingContext2D
 	canvasIndestructiblesContext: ?CanvasRenderingContext2D
@@ -36,16 +46,16 @@ export default class Game extends Component<Props> {
 	props: Props
 
 	gameFrame = () => {
-		if (this.props.pressedKeys.includes('w')) {
+		if (this.props.pressedKeys.includes('w') || (gamePad && gamePad.buttons[12].pressed)) {
 			cameraY--
 		}
-		if (this.props.pressedKeys.includes('s')) {
+		if (this.props.pressedKeys.includes('s') || (gamePad && gamePad.buttons[13].pressed)) {
 			cameraY++
 		}
-		if (this.props.pressedKeys.includes('a')) {
+		if (this.props.pressedKeys.includes('a') || (gamePad && gamePad.buttons[14].pressed)) {
 			cameraX--
 		}
-		if (this.props.pressedKeys.includes('d')) {
+		if (this.props.pressedKeys.includes('d') || (gamePad && gamePad.buttons[15].pressed)) {
 			cameraX++
 		}
 		[

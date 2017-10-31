@@ -5,16 +5,6 @@ import { toPairs } from 'lodash'
 import styles from './App.css'
 import Game from './Game'
 
-let gamePad = {}
-
-window.addEventListener('gamepadconnected', event => {
-	gamePad = event.gamepad
-})
-
-window.addEventListener('gamepaddisconnected', () => {
-	gamePad = {}
-})
-
 type State = { [keyboardButtonName: string]: boolean }
 
 class App extends Component<{}, State> {
@@ -45,7 +35,6 @@ class App extends Component<{}, State> {
 				</div>
 				<Game
 					pressedKeys={pressedKeys}
-					gamePad={gamePad}
 					width={900}
 					height={600}
 				/>
