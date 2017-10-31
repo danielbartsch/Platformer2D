@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react'
 import { toPairs } from 'lodash'
 import styles from './App.css'
@@ -13,15 +15,17 @@ window.addEventListener('gamepaddisconnected', () => {
 	gamePad = {}
 })
 
-class App extends Component {
+type State = { [keyboardButtonName: string]: boolean }
+
+class App extends Component<{}, State> {
 	state = {}
 
-	handleKeyDown = event => {
+	handleKeyDown = (event: SyntheticEvent<HTMLDivElement>) => {
 		event.preventDefault()
 		this.setState({ [event.key]: true })
 	}
 
-	handleKeyUp = event => {
+	handleKeyUp = (event: SyntheticEvent<HTMLDivElement>) => {
 		event.preventDefault()
 		this.setState({ [event.key]: false })
 	}

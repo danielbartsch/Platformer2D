@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react'
 import { drawRelatively } from './camera'
 
@@ -19,26 +21,40 @@ const effectEntities = []
 
 let run = 0
 
-export default class Game extends Component {
+type Props = { width: number, height: number }
+
+export default class Game extends Component<Props> {
+	canvasBackgroundContext: ?CanvasRenderingContext2D
+	canvasIndestructiblesContext: ?CanvasRenderingContext2D
+	canvasDestructiblesContext: ?CanvasRenderingContext2D
+	canvasEnemiesContext: ?CanvasRenderingContext2D
+	canvasMainCharContext: ?CanvasRenderingContext2D
+	canvasEffectsContext: ?CanvasRenderingContext2D
+	gameInterval: number
+
+	props: Props
+
 	gameFrame = () => {
 		[
-			[this.canvasBackground, backgroundEntities],
-			[this.canvasIndestructibles, indestructibleEntities],
-			[this.canvasDestructibles, destructibleEntities],
-			[this.canvasEnemies, enemyEntities],
-			[this.canvasMainChar, mainCharacter],
-			[this.canvasEffects, effectEntities],
+			[this.canvasBackgroundContext, backgroundEntities],
+			[this.canvasIndestructiblesContext, indestructibleEntities],
+			[this.canvasDestructiblesContext, destructibleEntities],
+			[this.canvasEnemiesContext, enemyEntities],
+			[this.canvasMainCharContext, mainCharacter],
+			[this.canvasEffectsContext, effectEntities],
 		].forEach(([context, entities]) => {
-			drawRelatively(
-				context,
-				entities,
-				this.props.width,
-				this.props.height,
-				100,
-				100,
-				30 + (Math.cos(run += 0.01) * 40),
-				30 + (Math.cos(run += 0.01) * 40),
-			)
+			if (context) {
+				drawRelatively(
+					context,
+					entities,
+					this.props.width,
+					this.props.height,
+					100,
+					100,
+					30 + (Math.cos(run += 0.01) * 40),
+					30 + (Math.cos(run += 0.01) * 40),
+				)
+			}
 		})
 	}
 
@@ -54,7 +70,7 @@ export default class Game extends Component {
 					style={{ position: 'absolute' }}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasBackground = ref }}
+					ref={ref => { this.canvasBackgroundContext = ref && ref.getContext('2d') }}
 				>
                     Background Canvas
 				</canvas>
@@ -62,7 +78,7 @@ export default class Game extends Component {
 					style={{ position: 'absolute' }}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasIndestructibles = ref }}
+					ref={ref => { this.canvasIndestructiblesContext = ref && ref.getContext('2d') }}
 				>
                     Indestructibles Canvas
 				</canvas>
@@ -70,7 +86,7 @@ export default class Game extends Component {
 					style={{ position: 'absolute' }}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasDestructibles = ref }}
+					ref={ref => { this.canvasDestructiblesContext = ref && ref.getContext('2d') }}
 				>
                     Destructibles Canvas
 				</canvas>
@@ -78,7 +94,7 @@ export default class Game extends Component {
 					style={{ position: 'absolute' }}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasEnemies = ref }}
+					ref={ref => { this.canvasEnemiesContext = ref && ref.getContext('2d') }}
 				>
                     Enemies Canvas
 				</canvas>
@@ -86,7 +102,7 @@ export default class Game extends Component {
 					style={{ position: 'absolute' }}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasMainChar = ref }}
+					ref={ref => { this.canvasMainCharContext = ref && ref.getContext('2d') }}
 				>
                     MainChar Canvas
 				</canvas>
@@ -94,7 +110,7 @@ export default class Game extends Component {
 					style={{ position: 'absolute' }}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasEffects = ref }}
+					ref={ref => { this.canvasEffectsContext = ref && ref.getContext('2d') }}
 				>
                     Effects Canvas
 				</canvas>
