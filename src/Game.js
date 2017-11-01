@@ -2,16 +2,17 @@
 
 import React, { Component } from 'react'
 import { drawRelatively } from './camera'
+import { nextPosition, nextAccelerationX, nextAccelerationY } from './entityUtils'
 import styles from './App.css'
 
-const draw = (context, x, y) => {
+const draw = (width, height, color = '#ffa') => (context, x, y) => {
 	context.beginPath()
 	context.moveTo(x, y)
-	context.lineTo(x + 20, y)
-	context.lineTo(x + 20, y + 20)
-	context.lineTo(x, y + 20)
+	context.lineTo(x + width, y)
+	context.lineTo(x + width, y + height)
+	context.lineTo(x, y + height)
 	context.closePath()
-	context.fillStyle = '#ffa'
+	context.fillStyle = color
 	context.fill()
 }
 
@@ -21,35 +22,43 @@ const backgroundEntities = [
 		y: -10,
 		width: 120,
 		height: 120,
-		draw: (context, x, y) => {
-			context.beginPath()
-			context.moveTo(x, y)
-			context.lineTo(x + 120, y)
-			context.lineTo(x + 120, y + 120)
-			context.lineTo(x, y + 120)
-			context.closePath()
-			context.fillStyle = 'rgba(255,255,255,0.01)'
-			context.fill()
-		},
+		draw: draw(120, 120, 'rgba(255,255,255,0.01)'),
 	},
 ]
 const indestructibleEntities = [
-	{ x: 0, y: 0, width: 20, height: 20, draw },
-	{ x: 10, y: 10, width: 20, height: 20, draw },
-	{ x: 20, y: 20, width: 20, height: 20, draw },
-	{ x: 30, y: 50, width: 20, height: 20, draw },
-	{ x: 40, y: 80, width: 20, height: 20, draw },
-	{ x: 50, y: 20, width: 20, height: 20, draw },
-	{ x: 60, y: 50, width: 20, height: 20, draw },
-	{ x: 70, y: 10, width: 20, height: 20, draw },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#ffa') },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#faf') },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#aff') },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#faa') },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#aaf') },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#afa') },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#f8f') },
+	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#8f8') },
 ]
+
 const destructibleEntities = []
 const enemyEntities = []
-const mainCharacter = []
+const mainCharacter = [
+	{
+		x: 30,
+		y: 300,
+		velocityX: 0,
+		velocityY: 0,
+		accelerationX: 0,
+		accelerationY: 0,
+		maxVelocityX: 1.6,
+		maxVelocityY: 5,
+		maxAccelerationX: 0.2,
+		maxAccelerationY: 0.2,
+		width: 20,
+		height: 60,
+		draw: draw(20, 60, '#f33'),
+	},
+]
 const effectEntities = []
 
-let cameraX = 0
-let cameraY = 0
+const cameraX = -100
+let cameraY = -300
 
 type Props = { width: number, height: number, pressedKeys: Array<string> }
 
@@ -70,23 +79,60 @@ export default class Game extends Component<Props> {
 	canvasEnemiesContext: ?CanvasRenderingContext2D
 	canvasMainCharContext: ?CanvasRenderingContext2D
 	canvasEffectsContext: ?CanvasRenderingContext2D
+	drawInterval: number
 	gameInterval: number
+	cameraInterval: number
 
 	props: Props
 
-	gameFrame = () => {
+	camera = () => {
 		if (this.props.pressedKeys.includes('w') || (gamePad && gamePad.buttons[12].pressed)) {
-			cameraY--
+			// look up
+			cameraY = cameraY - 1 > -this.props.height + mainCharacter[0].height ? cameraY - 1 : cameraY
 		}
 		if (this.props.pressedKeys.includes('s') || (gamePad && gamePad.buttons[13].pressed)) {
-			cameraY++
+			// look down
+			cameraY = cameraY + 1 < 0 ? cameraY + 1 : cameraY
+		}
+	}
+
+	game = () => {
+		if (this.props.pressedKeys.includes('w') || (gamePad && gamePad.buttons[12].pressed)) {
+			// look up
+		}
+		if (this.props.pressedKeys.includes('s') || (gamePad && gamePad.buttons[13].pressed)) {
+			// duck
 		}
 		if (this.props.pressedKeys.includes('a') || (gamePad && gamePad.buttons[14].pressed)) {
-			cameraX--
+			// walk left
+			nextAccelerationX(-0.01, mainCharacter[0])
 		}
 		if (this.props.pressedKeys.includes('d') || (gamePad && gamePad.buttons[15].pressed)) {
-			cameraX++
+			// walk right
+			nextAccelerationX(0.01, mainCharacter[0])
 		}
+		if (this.props.pressedKeys.includes('j') || (gamePad && gamePad.buttons[0].pressed)) {
+			// jump
+			mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
+		}
+		if (this.props.pressedKeys.includes('k') || (gamePad && gamePad.buttons[1].pressed)) {
+			// run
+			mainCharacter[0].maxVelocityX = 3.2
+		} else {
+			mainCharacter[0].maxVelocityX = 1.6
+		}
+
+		[
+			...backgroundEntities,
+			...indestructibleEntities,
+			...destructibleEntities,
+			...enemyEntities,
+			...mainCharacter,
+			...effectEntities,
+		].forEach(nextPosition)
+	}
+
+	draw = () => {
 		[
 			[this.canvasBackgroundContext, backgroundEntities],
 			[this.canvasIndestructiblesContext, indestructibleEntities],
@@ -101,17 +147,19 @@ export default class Game extends Component<Props> {
 					entities,
 					this.props.width,
 					this.props.height,
-					100,
-					100,
-					cameraX,
-					cameraY,
+					this.props.width,
+					this.props.height,
+					mainCharacter[0].x + cameraX,
+					mainCharacter[0].y + cameraY,
 				)
 			}
 		})
 	}
 
 	componentDidMount() {
-		this.gameInterval = setInterval(this.gameFrame, 16)
+		this.cameraInterval = setInterval(this.camera, 16)
+		this.gameInterval = setInterval(this.game, 16)
+		this.drawInterval = setInterval(this.draw, 16)
 	}
 
 	render() {
