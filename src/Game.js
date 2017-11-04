@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { drawRelatively } from './camera'
-import { nextPosition, nextAccelerationX, nextAccelerationY } from './entityUtils'
+import { nextPosition, nextAccelerationX, isInsideBounds } from './entityUtils'
 import styles from './App.css'
 
 const draw = (width, height, color = '#ffa') => (context, x, y) => {
@@ -130,14 +130,18 @@ export default class Game extends Component<Props> {
 			mainCharacter[0].maxVelocityX = 1.6
 		}
 
+		const { x, y, width, height } = this.getCameraBounds();
+
 		[
 			...backgroundEntities,
 			...indestructibleEntities,
 			...destructibleEntities,
 			...enemyEntities,
-			...mainCharacter,
 			...effectEntities,
-		].forEach(nextPosition)
+			...mainCharacter,
+		]
+			.filter(entity => isInsideBounds(entity, x - 20, y - 20, width + 40, height + 40))
+			.forEach(nextPosition)
 	}
 
 	draw = () => {
