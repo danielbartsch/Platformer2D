@@ -85,6 +85,13 @@ export default class Game extends Component<Props> {
 
 	props: Props
 
+	getCameraBounds = () => ({
+		x: mainCharacter[0].x + cameraX,
+		y: mainCharacter[0].y + cameraY,
+		width: this.props.width,
+		height: this.props.height,
+	})
+
 	camera = () => {
 		if (this.props.pressedKeys.includes('w') || (gamePad && gamePad.buttons[12].pressed)) {
 			// look up
@@ -133,6 +140,7 @@ export default class Game extends Component<Props> {
 	}
 
 	draw = () => {
+		const { x, y, width, height } = this.getCameraBounds();
 		[
 			[this.canvasBackgroundContext, backgroundEntities],
 			[this.canvasIndestructiblesContext, indestructibleEntities],
@@ -147,10 +155,10 @@ export default class Game extends Component<Props> {
 					entities,
 					this.props.width,
 					this.props.height,
-					this.props.width,
-					this.props.height,
-					mainCharacter[0].x + cameraX,
-					mainCharacter[0].y + cameraY,
+					width,
+					height,
+					x,
+					y,
 				)
 			}
 		})
