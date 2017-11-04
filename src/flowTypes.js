@@ -11,6 +11,8 @@ export type Entity = {|
 	maxVelocityY?: number,
 	maxAccelerationX?: number,
 	maxAccelerationY?: number,
+	isObstacle?: boolean,
+	name: string,
 	width: number,
 	height: number,
 	draw: (context: CanvasRenderingContext2D, x: number, y: number) => void,

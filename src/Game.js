@@ -23,17 +23,16 @@ const backgroundEntities = [
 		width: 120,
 		height: 120,
 		draw: draw(120, 120, 'rgba(255,255,255,0.01)'),
+		name: 'background',
 	},
 ]
 const indestructibleEntities = [
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#ffa') },
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#faf') },
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#aff') },
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#faa') },
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#aaf') },
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#afa') },
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#f8f') },
-	{ x: Math.random() * 300, y: Math.random() * 300, velocityX: Math.random() / 10, velocityY: Math.random() / 10, maxVelocityX: 1, maxVelocityY: 1, width: 20, height: 20, draw: draw(20, 20, '#8f8') },
+	{ name: 'ground', isObstacle: true, x: 0, y: 400, width: 2000, height: 20, draw: draw(2000, 20, '#fc0') },
+	{ name: 'obstacle1', isObstacle: true, x: 100, y: 380, width: 20, height: 20, draw: draw(20, 20, '#eb0') },
+	{ name: 'obstacle2', isObstacle: true, x: 120, y: 380, width: 20, height: 20, draw: draw(20, 20, '#da0') },
+	{ name: 'obstacle3', isObstacle: true, x: 140, y: 380, width: 20, height: 20, draw: draw(20, 20, '#c90') },
+	{ name: 'obstacle4', isObstacle: true, x: 140, y: 360, width: 20, height: 20, draw: draw(20, 20, '#b80') },
+	{ name: 'obstacle5', isObstacle: true, x: 160, y: 340, width: 20, height: 20, draw: draw(20, 20, '#c70') },
 ]
 
 const destructibleEntities = []
@@ -47,11 +46,13 @@ const mainCharacter = [
 		accelerationX: 0,
 		accelerationY: 0,
 		maxVelocityX: 1.6,
-		maxVelocityY: 5,
+		maxVelocityY: 2,
 		maxAccelerationX: 0.2,
 		maxAccelerationY: 0.2,
 		width: 20,
 		height: 60,
+		isObstacle: true,
+		name: 'main',
 		draw: draw(20, 60, '#f33'),
 	},
 ]
