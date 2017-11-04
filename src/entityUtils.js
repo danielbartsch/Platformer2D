@@ -3,6 +3,20 @@
 import { isNil } from 'lodash'
 import type { Entity } from './flowTypes'
 
+export const isInsideBounds = (entity: Entity, x: number, y: number, width: number, height: number): boolean => (
+	(
+		entity.x + entity.width >= x &&
+		entity.y + entity.height >= y &&
+		entity.x <= x + width &&
+		entity.y <= y + height
+	) || (
+		// for entities bigger than the rect
+		(entity.width > width && entity.height > height) &&
+		(entity.x < x && entity.y < x) &&
+		(entity.x + entity.width > width && entity.y + entity.height > height)
+	)
+)
+
 export const nextAccelerationX = (addedAcceleration: number, entity: Entity): number => {
 	const intendedAccelerationX = (isNil(entity.accelerationX) ? 0 : entity.accelerationX || 0) + addedAcceleration
 	const maxAccelerationX = entity.maxAccelerationX || 0
