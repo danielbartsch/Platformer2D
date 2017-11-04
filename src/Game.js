@@ -113,11 +113,11 @@ export default class Game extends Component<Props> {
 		}
 		if (this.props.pressedKeys.includes('a') || (gamePad && gamePad.buttons[14].pressed)) {
 			// walk left
-			nextAccelerationX(-0.01, mainCharacter[0])
+			mainCharacter[0].accelerationX = nextAccelerationX(-0.01, mainCharacter[0])
 		}
 		if (this.props.pressedKeys.includes('d') || (gamePad && gamePad.buttons[15].pressed)) {
 			// walk right
-			nextAccelerationX(0.01, mainCharacter[0])
+			mainCharacter[0].accelerationX = nextAccelerationX(0.01, mainCharacter[0])
 		}
 		if (this.props.pressedKeys.includes('j') || (gamePad && gamePad.buttons[0].pressed)) {
 			// jump
