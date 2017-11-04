@@ -11,12 +11,12 @@ class App extends Component<{}, State> {
 	state = {}
 
 	handleKeyDown = (event: SyntheticEvent<HTMLDivElement>) => {
-		event.preventDefault()
+		if (event.key.length === 1) event.preventDefault()
 		this.setState({ [event.key]: true })
 	}
 
 	handleKeyUp = (event: SyntheticEvent<HTMLDivElement>) => {
-		event.preventDefault()
+		if (event.key.length === 1) event.preventDefault()
 		this.setState({ [event.key]: false })
 	}
 
