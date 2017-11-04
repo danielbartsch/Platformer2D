@@ -73,6 +73,30 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 	const intendedX = entity.x + entity.velocityX
 	const intendedY = entity.y + entity.velocityY
 
+	if (entity.isObstacle && entity.name === 'main') {
+		const collidableEntities = entities.filter(({ isObstacle }, index) => isObstacle && index !== entityIndex)
+
+		const insideEntity = collidableEntities.find(otherEntity =>
+			isInsideBounds(otherEntity, intendedX, intendedY, entity.width, entity.height)
+		)
+
+		if (insideEntity) {
+			if (entity.x + entity.width <= insideEntity.x) {
+				// left collision
+				entity.velocityX *= -1
+			} else if (entity.x >= insideEntity.x + insideEntity.width) {
+				// right collision
+				entity.velocityX *= -1
+			}
+			if (entity.y + entity.height <= insideEntity.y) {
+				// top collision
+				entity.velocityY *= -1
+			} else if (entity.y >= insideEntity.y + insideEntity.height) {
+				// bottom collision
+				entity.velocityY *= -1
+			}
+		}
+	}
 	entity.x = intendedX
 	entity.y = intendedY
 }
