@@ -45,10 +45,10 @@ const mainCharacter = [
 		velocityY: 0,
 		accelerationX: 0,
 		accelerationY: 0,
-		maxVelocityX: 1.6,
-		maxVelocityY: 2,
+		maxVelocityX: 3,
+		maxVelocityY: 10,
 		maxAccelerationX: 0.2,
-		maxAccelerationY: 0.2,
+		maxAccelerationY: 0.9,
 		width: 20,
 		height: 60,
 		isObstacle: true,
@@ -125,9 +125,9 @@ export default class Game extends Component<Props> {
 		}
 		if (this.props.pressedKeys.includes('k') || (gamePad && gamePad.buttons[1].pressed)) {
 			// run
-			mainCharacter[0].maxVelocityX = 3.2
+			mainCharacter[0].maxVelocityX = 6
 		} else {
-			mainCharacter[0].maxVelocityX = 1.6
+			mainCharacter[0].maxVelocityX = 3
 		}
 
 		const { x, y, width, height } = this.getCameraBounds();
