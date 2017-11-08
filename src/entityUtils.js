@@ -85,18 +85,18 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 
 		if (insideEntity) {
 			if (entity.x + entity.width <= insideEntity.x) {
-				// left collision
-				entity.velocityX *= -1
+				// entity collided with left side of insideEntity
+				entity.x = insideEntity.x - entity.width
 			} else if (entity.x >= insideEntity.x + insideEntity.width) {
-				// right collision
-				entity.velocityX *= -1
+				// entity collided with right side of insideEntity
+				entity.x = insideEntity.x + insideEntity.width
 			}
 			if (entity.y + entity.height <= insideEntity.y) {
-				// top collision
-				entity.velocityY *= -1
+				// entity collided with top side of insideEntity
+				entity.y = insideEntity.y - entity.height
 			} else if (entity.y >= insideEntity.y + insideEntity.height) {
-				// bottom collision
-				entity.velocityY *= -1
+				// entity collided with bottom side of insideEntity
+				entity.y = insideEntity.y + insideEntity.height
 			}
 		}
 	}
