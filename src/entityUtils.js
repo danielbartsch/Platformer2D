@@ -79,24 +79,24 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 	if (entity.isObstacle && entity.name === 'main') {
 		const collidableEntities = entities.filter(({ isObstacle }, index) => isObstacle && index !== entityIndex)
 
-		const insideEntity = collidableEntities.find(otherEntity =>
+		const collidedEntity = collidableEntities.find(otherEntity =>
 			isInsideBounds(otherEntity, intendedX, intendedY, entity.width, entity.height)
 		)
 
-		if (insideEntity) {
-			if (entity.x + entity.width <= insideEntity.x) {
-				// entity collided with left side of insideEntity
-				entity.x = insideEntity.x - entity.width
-			} else if (entity.x >= insideEntity.x + insideEntity.width) {
-				// entity collided with right side of insideEntity
-				entity.x = insideEntity.x + insideEntity.width
+		if (collidedEntity) {
+			if (entity.x + entity.width <= collidedEntity.x) {
+				// entity collided with left side of collidedEntity
+				entity.x = collidedEntity.x - entity.width
+			} else if (entity.x >= collidedEntity.x + collidedEntity.width) {
+				// entity collided with right side of collidedEntity
+				entity.x = collidedEntity.x + collidedEntity.width
 			}
-			if (entity.y + entity.height <= insideEntity.y) {
-				// entity collided with top side of insideEntity
-				entity.y = insideEntity.y - entity.height
-			} else if (entity.y >= insideEntity.y + insideEntity.height) {
-				// entity collided with bottom side of insideEntity
-				entity.y = insideEntity.y + insideEntity.height
+			if (entity.y + entity.height <= collidedEntity.y) {
+				// entity collided with top side of collidedEntity
+				entity.y = collidedEntity.y - entity.height
+			} else if (entity.y >= collidedEntity.y + collidedEntity.height) {
+				// entity collided with bottom side of collidedEntity
+				entity.y = collidedEntity.y + collidedEntity.height
 			}
 		}
 	}
