@@ -125,9 +125,13 @@ export default class Game extends Component<Props> {
 			mainCharacter[0].isBlockedLeft = false
 			mainCharacter[0].accelerationX = nextAccelerationX(0.01, mainCharacter[0])
 		}
-		if (this.props.pressedKeys.includes('j') || (gamePad && gamePad.buttons[0].pressed)) {
+		if (
+			mainCharacter[0].isBlockedBottom === true &&
+			(this.props.pressedKeys.includes('j') || (gamePad && gamePad.buttons[0].pressed))
+		) {
 			// jump
 			mainCharacter[0].isBlockedBottom = false
+			mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
 			mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
 		}
 		if (this.props.pressedKeys.includes('k') || (gamePad && gamePad.buttons[1].pressed)) {
