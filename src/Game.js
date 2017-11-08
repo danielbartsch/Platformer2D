@@ -44,7 +44,7 @@ const mainCharacter = [
 		velocityX: 0,
 		velocityY: 0,
 		accelerationX: 0,
-		accelerationY: 0,
+		accelerationY: 0.9,
 		maxVelocityX: 3,
 		maxVelocityY: 10,
 		maxAccelerationX: 0.2,
