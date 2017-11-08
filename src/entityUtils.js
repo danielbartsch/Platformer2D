@@ -100,20 +100,20 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 		)
 
 		if (collidedEntity) {
-			if (entity.x + entity.width <= collidedEntity.x) {
+			if (entity.x + entity.width < collidedEntity.x) {
 				// entity collided with left side of collidedEntity
 				entity.x = collidedEntity.x - entity.width
 				entity.isBlockedRight = true
-			} else if (entity.x >= collidedEntity.x + collidedEntity.width) {
+			} else if (entity.x > collidedEntity.x + collidedEntity.width) {
 				// entity collided with right side of collidedEntity
 				entity.x = collidedEntity.x + collidedEntity.width
 				entity.isBlockedLeft = true
 			}
-			if (entity.y + entity.height <= collidedEntity.y) {
+			if (entity.y + entity.height < collidedEntity.y) {
 				// entity collided with top side of collidedEntity
 				entity.y = collidedEntity.y - entity.height
 				entity.isBlockedBottom = true
-			} else if (entity.y >= collidedEntity.y + collidedEntity.height) {
+			} else if (entity.y > collidedEntity.y + collidedEntity.height) {
 				// entity collided with bottom side of collidedEntity
 				entity.y = collidedEntity.y + collidedEntity.height
 				entity.isBlockedTop = true
