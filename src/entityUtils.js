@@ -30,7 +30,7 @@ export const nextAccelerationX = (addedAcceleration: number, entity: Entity): nu
 }
 
 export const nextAccelerationY = (addedAcceleration: number, entity: Entity): number => {
-	const maxAccelerationY = isNil(entity.maxAccelerationY) ? 0 : entity.maxAccelerationY
+	const maxAccelerationY = isNil(entity.maxAccelerationY) ? 0 : entity.maxAccelerationY || 0
 	const intendedAccelerationY = (isNil(entity.accelerationY) ? 0 : entity.accelerationY) + addedAcceleration
 
 	if (intendedAccelerationY > maxAccelerationY) {
@@ -43,7 +43,7 @@ export const nextAccelerationY = (addedAcceleration: number, entity: Entity): nu
 
 const nextVelocityX = (entity: Entity): number => {
 	const intendedVelocityX = (isNil(entity.velocityX) ? 0 : entity.velocityX) + nextAccelerationX(0, entity)
-	const maxVelocityX = isNil(entity.maxVelocityX) ? 0 : entity.maxVelocityX
+	const maxVelocityX = isNil(entity.maxVelocityX) ? 0 : entity.maxVelocityX || 0
 
 	if (intendedVelocityX > maxVelocityX) {
 		return maxVelocityX
@@ -55,7 +55,7 @@ const nextVelocityX = (entity: Entity): number => {
 
 const nextVelocityY = (entity: Entity): number => {
 	const intendedVelocityY = (isNil(entity.velocityY) ? 0 : entity.velocityY) + nextAccelerationY(0, entity)
-	const maxVelocityY = isNil(entity.maxVelocityY) ? 0 : entity.maxVelocityY
+	const maxVelocityY = isNil(entity.maxVelocityY) ? 0 : entity.maxVelocityY || 0
 
 	if (intendedVelocityY > maxVelocityY) {
 		return maxVelocityY
