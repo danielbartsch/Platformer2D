@@ -138,6 +138,7 @@ export default class Game extends Component<Props> {
 				)
 			}` :
 			''
+		document.getElementById('mainCharacter').innerHTML = JSON.stringify(mainCharacter[0], 0, 4)
 	}
 
 	game = () => {
@@ -267,6 +268,7 @@ export default class Game extends Component<Props> {
 				<div className={styles.pressedKeys}>
 					<span id="keyboard" /><br />
 					<span id="gamepad" />
+					<pre style={{ top: 560, position: 'relative' }} id="mainCharacter" />
 				</div>
 			</div>
 		)
