@@ -61,9 +61,10 @@ const effectEntities = []
 const cameraX = -100
 let cameraY = -300
 
-type Props = { width: number, height: number, pressedKeys: Array<string> }
+type Props = { width: number, height: number }
 
 let gamePad = null
+const keys = {}
 
 window.addEventListener('gamepadconnected', event => {
 	gamePad = event.gamepad
@@ -71,6 +72,16 @@ window.addEventListener('gamepadconnected', event => {
 
 window.addEventListener('gamepaddisconnected', () => {
 	gamePad = null
+})
+
+window.addEventListener('keydown', event => {
+	if (event.key.length === 1) event.preventDefault()
+	keys[event.key] = true
+})
+
+window.addEventListener('keyup', event => {
+	if (event.key.length === 1) event.preventDefault()
+	keys[event.key] = false
 })
 
 export default class Game extends Component<Props> {
@@ -94,37 +105,37 @@ export default class Game extends Component<Props> {
 	})
 
 	camera = () => {
-		if (this.props.pressedKeys.includes('w') || (gamePad && gamePad.buttons[12].pressed)) {
+		if (keys.w || (gamePad && gamePad.buttons[12].pressed)) {
 			// look up
 			cameraY = cameraY - 1 > -this.props.height + mainCharacter[0].height ? cameraY - 1 : cameraY
 		}
-		if (this.props.pressedKeys.includes('s') || (gamePad && gamePad.buttons[13].pressed)) {
+		if (keys.s || (gamePad && gamePad.buttons[13].pressed)) {
 			// look down
 			cameraY = cameraY + 1 < 0 ? cameraY + 1 : cameraY
 		}
 	}
 
 	game = () => {
-		if (this.props.pressedKeys.includes('w') || (gamePad && gamePad.buttons[12].pressed)) {
+		if (keys.w || (gamePad && gamePad.buttons[12].pressed)) {
 			// look up
 		}
-		if (this.props.pressedKeys.includes('s') || (gamePad && gamePad.buttons[13].pressed)) {
+		if (keys.s || (gamePad && gamePad.buttons[13].pressed)) {
 			// duck
 		}
-		if (this.props.pressedKeys.includes('a') || (gamePad && gamePad.buttons[14].pressed)) {
+		if (keys.a || (gamePad && gamePad.buttons[14].pressed)) {
 			// walk left
 			mainCharacter[0].accelerationX = nextAccelerationX(-0.01, mainCharacter[0])
 		}
-		if (this.props.pressedKeys.includes('d') || (gamePad && gamePad.buttons[15].pressed)) {
+		if (keys.d || (gamePad && gamePad.buttons[15].pressed)) {
 			// walk right
 			mainCharacter[0].accelerationX = nextAccelerationX(0.01, mainCharacter[0])
 		}
-		if (this.props.pressedKeys.includes('j') || (gamePad && gamePad.buttons[0].pressed)) {
+		if (keys.j || (gamePad && gamePad.buttons[0].pressed)) {
 			// jump
 			mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
 			mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
 		}
-		if (this.props.pressedKeys.includes('k') || (gamePad && gamePad.buttons[1].pressed)) {
+		if (keys.k || (gamePad && gamePad.buttons[1].pressed)) {
 			// run
 			mainCharacter[0].maxVelocityX = 6
 		} else {
