@@ -46,13 +46,9 @@ const mainCharacter = [
 		accelerationX: 0,
 		accelerationY: 0.9,
 		maxVelocityX: 3,
-		maxVelocityY: 10,
+		maxVelocityY: 12,
 		maxAccelerationX: 0.2,
 		maxAccelerationY: 0.9,
-		isBlockedTop: false,
-		isBlockedBottom: false,
-		isBlockedRight: false,
-		isBlockedLeft: false,
 		width: 20,
 		height: 60,
 		isObstacle: true,
@@ -117,20 +113,14 @@ export default class Game extends Component<Props> {
 		}
 		if (this.props.pressedKeys.includes('a') || (gamePad && gamePad.buttons[14].pressed)) {
 			// walk left
-			mainCharacter[0].isBlockedRight = false
 			mainCharacter[0].accelerationX = nextAccelerationX(-0.01, mainCharacter[0])
 		}
 		if (this.props.pressedKeys.includes('d') || (gamePad && gamePad.buttons[15].pressed)) {
 			// walk right
-			mainCharacter[0].isBlockedLeft = false
 			mainCharacter[0].accelerationX = nextAccelerationX(0.01, mainCharacter[0])
 		}
-		if (
-			mainCharacter[0].isBlockedBottom === true &&
-			(this.props.pressedKeys.includes('j') || (gamePad && gamePad.buttons[0].pressed))
-		) {
+		if (this.props.pressedKeys.includes('j') || (gamePad && gamePad.buttons[0].pressed)) {
 			// jump
-			mainCharacter[0].isBlockedBottom = false
 			mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
 			mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
 		}
