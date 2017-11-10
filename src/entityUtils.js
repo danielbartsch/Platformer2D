@@ -79,25 +79,39 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 	if (entity.isObstacle && entity.name === 'main') {
 		const collidableEntities = entities.filter(({ isObstacle }, index) => isObstacle && index !== entityIndex)
 
-		const collidedEntity = collidableEntities.find(otherEntity =>
+		const collidedEntities = collidableEntities.filter(otherEntity =>
 			isInsideBounds(otherEntity, intendedX, intendedY, entity.width, entity.height)
 		)
 
-		if (collidedEntity) {
-			if (entity.x + entity.width < collidedEntity.x) {
+		if (collidedEntities.length > 0) {
+			const leftCollidedEntity = collidedEntities.find(({ x }) => x >= entity.x + entity.width)
+			if (leftCollidedEntity) {
 				// entity collided with left side of collidedEntity
-				entity.x = collidedEntity.x - entity.width
-			} else if (entity.x > collidedEntity.x + collidedEntity.width) {
-				// entity collided with right side of collidedEntity
-				entity.x = collidedEntity.x + collidedEntity.width
+				entity.x = leftCollidedEntity.x - entity.width
+			} else {
+				const rightCollidedEntity = collidedEntities.find(({ x, width }) => x + width <= entity.x)
+				if (rightCollidedEntity) {
+					// entity collided with right side of collidedEntity
+					entity.x = rightCollidedEntity.x + rightCollidedEntity.width
+				} else {
+					entity.x = intendedX
+				}
 			}
-			if (entity.y + entity.height < collidedEntity.y) {
+
+			const topCollidedEntity = collidedEntities.find(({ y }) => y >= entity.y + entity.height)
+			if (topCollidedEntity) {
 				// entity collided with top side of collidedEntity
-				entity.y = collidedEntity.y - entity.height
-			} else if (entity.y > collidedEntity.y + collidedEntity.height) {
-				// entity collided with bottom side of collidedEntity
-				entity.y = collidedEntity.y + collidedEntity.height
+				entity.y = topCollidedEntity.y - entity.height
+			} else {
+				const bottomCollidedEntity = collidedEntities.find(({ y, height }) => y + height <= entity.y)
+				if (bottomCollidedEntity) {
+					// entity collided with bottom side of collidedEntity
+					entity.y = bottomCollidedEntity.y + bottomCollidedEntity.height
+				} else {
+					entity.y = intendedY
+				}
 			}
+
 			return
 		}
 	}
