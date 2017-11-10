@@ -1,8 +1,10 @@
 // @flow
 
 import React, { Component } from 'react'
+import { map, some } from 'lodash'
 import { drawRelatively } from './camera'
 import { nextPosition, nextAccelerationX, isInsideBounds } from './entityUtils'
+import { getGamePadButtonNames } from './gamePadUtils'
 import styles from './App.css'
 
 const draw = (width, height, color = '#ffa') => (context, x, y) => {
@@ -113,6 +115,29 @@ export default class Game extends Component<Props> {
 			// look down
 			cameraY = cameraY + 1 < 0 ? cameraY + 1 : cameraY
 		}
+		document.getElementById('keyboard').innerHTML = some(keys, key => key) ?
+			`Keyboard: ${
+				map(
+					keys,
+					(value, key) => ({ value, key })
+				).filter(
+					({ value }) => value
+				).map(
+					({ key }) => key
+				)
+			}` :
+			''
+		document.getElementById('gamepad').innerHTML = gamePad && some(gamePad.buttons, ({ pressed }) => pressed) ?
+			`GamePad: ${
+				gamePad.buttons.map(
+					(button, index) => ({ isPressed: button.pressed, index })
+				).filter(
+					({ isPressed }) => isPressed
+				).map(
+					({ index }) => getGamePadButtonNames(index)
+				)
+			}` :
+			''
 	}
 
 	game = () => {
@@ -239,6 +264,10 @@ export default class Game extends Component<Props> {
 				>
                     Effects Canvas
 				</canvas>
+				<div className={styles.pressedKeys}>
+					<span id="keyboard" /><br />
+					<span id="gamepad" />
+				</div>
 			</div>
 		)
 	}
