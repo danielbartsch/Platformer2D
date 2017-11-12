@@ -1,6 +1,11 @@
 // @flow
 
-export type Entity = {|
+import * as EntityTypes from './entityTypes'
+
+export type EntityType = $Keys<typeof EntityTypes>
+
+export type Entity = {
+	type: EntityType,
 	x: number, // must be leftMost point of entity
 	y: number, // must be topMost point of entity
 	velocityX?: number,
@@ -12,8 +17,6 @@ export type Entity = {|
 	maxAccelerationX?: number,
 	maxAccelerationY?: number,
 	isObstacle?: boolean,
-	name: string,
 	width: number,
 	height: number,
-	draw: (context: CanvasRenderingContext2D, x: number, y: number) => void,
-|}
+}

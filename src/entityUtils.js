@@ -1,7 +1,8 @@
 // @flow
 
 import { isNil } from 'lodash'
-import type { Entity } from './flowTypes'
+import type { Entity, EntityType } from './flowTypes'
+import * as EntityTypes from './entityTypes'
 
 export const isInsideBounds = (entity: Entity, x: number, y: number, width: number, height: number): boolean => (
 	(
@@ -76,10 +77,10 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 	const intendedX = entity.x + entity.velocityX
 	const intendedY = entity.y + entity.velocityY
 
-	if (entity.isObstacle && entity.name === 'main') {
-		const collidableEntities = entities.filter(({ isObstacle }, index) => isObstacle && index !== entityIndex)
-
-		const collidedEntities = collidableEntities.filter(otherEntity =>
+	if (entity.isObstacle && entity.type === EntityTypes.MAIN_CHARACTER) {
+		const collidedEntities = entities.filter((otherEntity, index) =>
+			otherEntity.isObstacle &&
+			index !== entityIndex &&
 			isInsideBounds(otherEntity, intendedX, intendedY, entity.width, entity.height)
 		)
 
@@ -117,4 +118,57 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 	}
 	entity.x = intendedX
 	entity.y = intendedY
+}
+
+export const getDimensions = (type: EntityType): {| height: number, width: number |} => {
+	switch (type) {
+	case EntityTypes.MAIN_CHARACTER:
+		return { height: 60, width: 20 }
+	case EntityTypes.BLOCK_1:
+		return { height: 20, width: 20 }
+	case EntityTypes.BLOCK_2:
+		return { height: 40, width: 40 }
+	case EntityTypes.PLATFORM:
+		return { height: 10, width: 80 }
+	case EntityTypes.BACKGROUND:
+		return { height: 100, width: 100 }
+	default:
+		return { height: 0, width: 0 }
+	}
+}
+
+const draw = (context, x, y, width, height, color = '#ffa') => {
+	context.beginPath()
+	context.moveTo(x, y)
+	context.lineTo(x + width, y)
+	context.lineTo(x + width, y + height)
+	context.lineTo(x, y + height)
+	context.closePath()
+	context.fillStyle = color
+	context.fill()
+}
+
+export const drawEntity = (context: CanvasRenderingContext2D, entity: Entity, x: number, y: number) => {
+	switch (entity.type) {
+	case EntityTypes.MAIN_CHARACTER: {
+		draw(context, x, y, entity.width, entity.height, '#f33')
+		break
+	}
+	case EntityTypes.BLOCK_1: {
+		draw(context, x, y, entity.width, entity.height, '#aae')
+		break
+	}
+	case EntityTypes.BLOCK_2: {
+		draw(context, x, y, entity.width, entity.height, '#eaa')
+		break
+	}
+	case EntityTypes.PLATFORM: {
+		draw(context, x, y, entity.width, entity.height, '#aea')
+		break
+	}
+	case EntityTypes.BACKGROUND: {
+		draw(context, x, y, entity.width, entity.height, '#020')
+		break
+	}
+	}
 }

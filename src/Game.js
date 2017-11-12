@@ -3,44 +3,45 @@
 import React, { Component } from 'react'
 import { map, some } from 'lodash'
 import { drawRelatively } from './camera'
-import { nextPosition, nextAccelerationX, isInsideBounds } from './entityUtils'
+import { nextPosition, nextAccelerationX, isInsideBounds, getDimensions } from './entityUtils'
+import * as EntityTypes from './entityTypes'
+import type { Entity } from './flowTypes'
 import { getGamePadButtonNames } from './gamePadUtils'
 import styles from './App.css'
 
-const draw = (width, height, color = '#ffa') => (context, x, y) => {
-	context.beginPath()
-	context.moveTo(x, y)
-	context.lineTo(x + width, y)
-	context.lineTo(x + width, y + height)
-	context.lineTo(x, y + height)
-	context.closePath()
-	context.fillStyle = color
-	context.fill()
-}
-
-const backgroundEntities = [
+const backgroundEntities: Array<Entity> = [
 	{
+		type: EntityTypes.BACKGROUND,
+		...getDimensions(EntityTypes.BACKGROUND),
 		x: -10,
 		y: -10,
-		width: 120,
-		height: 120,
-		draw: draw(120, 120, 'rgba(255,255,255,0.01)'),
-		name: 'background',
 	},
 ]
-const indestructibleEntities = [
-	{ name: 'ground', isObstacle: true, x: 0, y: 400, width: 2000, height: 20, draw: draw(2000, 20, '#fc0') },
-	{ name: 'obstacle1', isObstacle: true, x: 100, y: 380, width: 20, height: 20, draw: draw(20, 20, '#eb0') },
-	{ name: 'obstacle2', isObstacle: true, x: 120, y: 380, width: 20, height: 20, draw: draw(20, 20, '#da0') },
-	{ name: 'obstacle3', isObstacle: true, x: 140, y: 380, width: 20, height: 20, draw: draw(20, 20, '#c90') },
-	{ name: 'obstacle4', isObstacle: true, x: 140, y: 360, width: 20, height: 20, draw: draw(20, 20, '#b80') },
-	{ name: 'obstacle5', isObstacle: true, x: 160, y: 340, width: 20, height: 20, draw: draw(20, 20, '#c70') },
+const indestructibleEntities: Array<Entity> = [
+	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 0, y: 400 },
+	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 50, y: 400 },
+	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 100, y: 400 },
+	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 150, y: 400 },
+	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 200, y: 400 },
+	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 250, y: 400 },
+	{ type: EntityTypes.PLATFORM, ...getDimensions(EntityTypes.PLATFORM), isObstacle: true, x: 0, y: 300 },
+	{ type: EntityTypes.PLATFORM, ...getDimensions(EntityTypes.PLATFORM), isObstacle: true, x: 0, y: 200 },
+	{ type: EntityTypes.PLATFORM, ...getDimensions(EntityTypes.PLATFORM), isObstacle: true, x: 0, y: 100 },
+	{ type: EntityTypes.PLATFORM, ...getDimensions(EntityTypes.PLATFORM), isObstacle: true, x: 0, y: 0 },
+	{ type: EntityTypes.PLATFORM, ...getDimensions(EntityTypes.PLATFORM), isObstacle: true, x: 0, y: -100 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 100, y: 380 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 120, y: 380 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 140, y: 380 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 140, y: 360 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 160, y: 340 },
 ]
 
-const destructibleEntities = []
-const enemyEntities = []
-const mainCharacter = [
+const destructibleEntities: Array<Entity> = []
+const enemyEntities: Array<Entity> = []
+const mainCharacter: Array<Entity> = [
 	{
+		type: EntityTypes.MAIN_CHARACTER,
+		...getDimensions(EntityTypes.MAIN_CHARACTER),
 		x: 30,
 		y: 300,
 		velocityX: 0,
@@ -51,14 +52,10 @@ const mainCharacter = [
 		maxVelocityY: 12,
 		maxAccelerationX: 0.2,
 		maxAccelerationY: 0.9,
-		width: 20,
-		height: 60,
 		isObstacle: true,
-		name: 'main',
-		draw: draw(20, 60, '#f33'),
 	},
 ]
-const effectEntities = []
+const effectEntities: Array<Entity> = []
 
 const cameraX = -100
 let cameraY = -300
@@ -138,7 +135,7 @@ export default class Game extends Component<Props> {
 				)
 			}` :
 			''
-		document.getElementById('mainCharacter').innerHTML = JSON.stringify(mainCharacter[0], 0, 4)
+		document.getElementById('mainCharacter').innerHTML = JSON.stringify(mainCharacter[0], undefined, 4)
 	}
 
 	game = () => {

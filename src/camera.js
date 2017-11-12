@@ -1,7 +1,7 @@
 // @flow
 
 import type { Entity } from './flowTypes'
-import { isInsideBounds } from './entityUtils'
+import { isInsideBounds, drawEntity } from './entityUtils'
 
 export const drawRelatively = (
 	context: CanvasRenderingContext2D,
@@ -19,7 +19,7 @@ export const drawRelatively = (
 	context.strokeRect(0, 0, drawWidth, drawHeight) // camera view area
 	entities.forEach(entity => {
 		if (isInsideBounds(entity, x, y, drawWidth, drawHeight)) {
-			entity.draw(context, entity.x - x, entity.y - y)
+			drawEntity(context, entity, entity.x - x, entity.y - y)
 		}
 	})
 }
