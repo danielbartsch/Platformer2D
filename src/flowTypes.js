@@ -17,6 +17,10 @@ export type Entity = {
 	maxAccelerationX?: number,
 	maxAccelerationY?: number,
 	isObstacle?: boolean,
+	isObstacleTop?: boolean,
+	isObstacleBottom?: boolean,
+	isObstacleLeft?: boolean,
+	isObstacleRight?: boolean,
 	width: number,
 	height: number,
 }
