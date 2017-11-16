@@ -93,21 +93,21 @@ const nextVelocityY = (entity: Entity): number => {
 }
 
 // mutating
-export const nextPosition = (entity: Entity, entityIndex: number, entities: Array<Entity>): void => {
+export const nextState = (entity: Entity, entityIndex: number, entities: Array<Entity>): void => {
 	entity.accelerationX = nextAccelerationX(0, entity)
 	entity.accelerationY = nextAccelerationY(0, entity)
 
-	entity.velocityX = nextVelocityX(entity)
-	entity.velocityY = nextVelocityY(entity)
+	const intendedVelocityX = nextVelocityX(entity)
+	const intendedVelocityY = nextVelocityY(entity)
 
-	const intendedX = entity.x + entity.velocityX
-	const intendedY = entity.y + entity.velocityY
+	const intendedPositionX = entity.x + intendedVelocityX
+	const intendedPositionY = entity.y + intendedVelocityY
 
 	if (entity.isObstacle && entity.type === EntityTypes.MAIN_CHARACTER) {
 		const collidedEntities = entities.filter((otherEntity, index) =>
 			otherEntity.isObstacle &&
 			index !== entityIndex &&
-			isInsideBounds(otherEntity, intendedX, intendedY, entity.width, entity.height)
+			isInsideBounds(otherEntity, intendedPositionX, intendedPositionY, entity.width, entity.height)
 		)
 
 		if (collidedEntities.length > 0) {
@@ -115,13 +115,16 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 			if (leftCollidedEntity && getObstacleState(entity, leftCollidedEntity).isObstacleLeft) {
 				// entity collided with left side of collidedEntity
 				entity.x = leftCollidedEntity.x - entity.width
+				entity.velocityX = 0
 			} else {
 				const rightCollidedEntity = collidedEntities.find(({ x, width }) => x + width <= entity.x)
 				if (rightCollidedEntity && getObstacleState(entity, rightCollidedEntity).isObstacleRight) {
 					// entity collided with right side of collidedEntity
 					entity.x = rightCollidedEntity.x + rightCollidedEntity.width
+					entity.velocityX = 0
 				} else {
-					entity.x = intendedX
+					entity.x = intendedPositionX
+					entity.velocityX = intendedVelocityX
 				}
 			}
 
@@ -129,21 +132,28 @@ export const nextPosition = (entity: Entity, entityIndex: number, entities: Arra
 			if (topCollidedEntity && getObstacleState(entity, topCollidedEntity).isObstacleTop) {
 				// entity collided with top side of collidedEntity
 				entity.y = topCollidedEntity.y - entity.height
+				entity.velocityY = 0
 			} else {
 				const bottomCollidedEntity = collidedEntities.find(({ y, height }) => y + height <= entity.y)
 				if (bottomCollidedEntity && getObstacleState(entity, bottomCollidedEntity).isObstacleBottom) {
 					// entity collided with bottom side of collidedEntity
 					entity.y = bottomCollidedEntity.y + bottomCollidedEntity.height
+					entity.velocityY = 0
 				} else {
-					entity.y = intendedY
+					entity.y = intendedPositionY
+					entity.velocityY = intendedVelocityY
 				}
 			}
 
 			return
 		}
 	}
-	entity.x = intendedX
-	entity.y = intendedY
+
+	entity.velocityX = intendedVelocityX
+	entity.velocityY = intendedVelocityY
+
+	entity.x = intendedPositionX
+	entity.y = intendedPositionY
 }
 
 export const getDimensions = (type: EntityType): {| height: number, width: number |} => {

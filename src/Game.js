@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { map, some } from 'lodash'
 import { drawRelatively } from './camera'
-import { nextPosition, nextAccelerationX, isInsideBounds, getDimensions } from './entityUtils'
+import { nextState, nextAccelerationX, isInsideBounds, getDimensions } from './entityUtils'
 import * as EntityTypes from './entityTypes'
 import type { Entity } from './flowTypes'
 import { getGamePadButtonNames } from './gamePadUtils'
@@ -177,7 +177,7 @@ export default class Game extends Component<Props> {
 			...mainCharacter,
 		]
 			.filter(entity => isInsideBounds(entity, x - 20, y - 20, width + 40, height + 40))
-			.forEach(nextPosition)
+			.forEach(nextState)
 	}
 
 	draw = () => {
