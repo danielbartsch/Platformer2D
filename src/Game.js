@@ -35,6 +35,18 @@ const indestructibleEntities: Array<Entity> = [
 	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 140, y: 380 },
 	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 140, y: 360 },
 	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 160, y: 340 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 290, y: 400 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 310, y: 420 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 330, y: 440 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 350, y: 460 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 370, y: 480 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 390, y: 500 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 410, y: 520 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 430, y: 540 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 450, y: 560 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 470, y: 580 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 490, y: 600 },
+	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 510, y: 620 },
 ]
 
 const destructibleEntities: Array<Entity> = []
