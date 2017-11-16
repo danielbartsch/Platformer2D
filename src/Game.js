@@ -7,6 +7,7 @@ import { nextPosition, nextAccelerationX, isInsideBounds, getDimensions } from '
 import * as EntityTypes from './entityTypes'
 import type { Entity } from './flowTypes'
 import { getGamePadButtonNames } from './gamePadUtils'
+import { setCanvasOptions } from './canvasUtils'
 import styles from './App.css'
 
 const backgroundEntities: Array<Entity> = [
@@ -218,7 +219,10 @@ export default class Game extends Component<Props> {
 					className={styles.canvas}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasBackgroundContext = ref && ref.getContext('2d') }}
+					ref={ref => {
+						this.canvasBackgroundContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasBackgroundContext)
+					}}
 				>
                     Background Canvas
 				</canvas>
@@ -226,7 +230,10 @@ export default class Game extends Component<Props> {
 					className={styles.canvas}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasIndestructiblesContext = ref && ref.getContext('2d') }}
+					ref={ref => {
+						this.canvasIndestructiblesContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasIndestructiblesContext)
+					}}
 				>
                     Indestructibles Canvas
 				</canvas>
@@ -234,7 +241,10 @@ export default class Game extends Component<Props> {
 					className={styles.canvas}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasDestructiblesContext = ref && ref.getContext('2d') }}
+					ref={ref => {
+						this.canvasDestructiblesContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasDestructiblesContext)
+					}}
 				>
                     Destructibles Canvas
 				</canvas>
@@ -242,7 +252,10 @@ export default class Game extends Component<Props> {
 					className={styles.canvas}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasEnemiesContext = ref && ref.getContext('2d') }}
+					ref={ref => {
+						this.canvasEnemiesContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasEnemiesContext)
+					}}
 				>
                     Enemies Canvas
 				</canvas>
@@ -250,7 +263,10 @@ export default class Game extends Component<Props> {
 					className={styles.canvas}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasMainCharContext = ref && ref.getContext('2d') }}
+					ref={ref => {
+						this.canvasMainCharContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasMainCharContext)
+					}}
 				>
                     MainChar Canvas
 				</canvas>
@@ -258,7 +274,10 @@ export default class Game extends Component<Props> {
 					className={styles.canvas}
 					width={width}
 					height={height}
-					ref={ref => { this.canvasEffectsContext = ref && ref.getContext('2d') }}
+					ref={ref => {
+						this.canvasEffectsContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasEffectsContext)
+					}}
 				>
                     Effects Canvas
 				</canvas>
