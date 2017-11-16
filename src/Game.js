@@ -160,11 +160,14 @@ export default class Game extends Component<Props> {
 		}
 		if (keys.a || (gamePad && gamePad.buttons[14].pressed)) {
 			// walk left
-			mainCharacter[0].accelerationX = nextAccelerationX(-0.01, mainCharacter[0])
-		}
-		if (keys.d || (gamePad && gamePad.buttons[15].pressed)) {
+			mainCharacter[0].velocityX = -mainCharacter[0].maxVelocityX
+		} else if (keys.d || (gamePad && gamePad.buttons[15].pressed)) {
 			// walk right
-			mainCharacter[0].accelerationX = nextAccelerationX(0.01, mainCharacter[0])
+			mainCharacter[0].velocityX = mainCharacter[0].maxVelocityX
+		} else if (mainCharacter[0].velocityX < 0.0001) {
+			mainCharacter[0].velocityX = 0
+		} else {
+			mainCharacter[0].velocityX *= 0.5
 		}
 		if (keys.j || (gamePad && gamePad.buttons[0].pressed)) {
 			// jump
