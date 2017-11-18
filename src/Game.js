@@ -204,16 +204,15 @@ export default class Game extends Component<Props> {
 			mainCharacter[0].maxVelocityX = 3
 		}
 
-		const { x, y, width, height } = this.getCameraBounds();
+		const { x, y, width, height } = this.getCameraBounds()
 
-		[
-			...backgroundEntities,
-			...indestructibleEntities,
-			...destructibleEntities,
-			...enemyEntities,
-			...effectEntities,
-			...mainCharacter,
-		]
+		backgroundEntities.concat(
+			indestructibleEntities,
+			destructibleEntities,
+			enemyEntities,
+			effectEntities,
+			mainCharacter,
+		)
 			.filter(entity => isInsideBounds(entity, x - 20, y - 20, width + 40, height + 40))
 			.forEach(nextState)
 	}
