@@ -87,8 +87,8 @@ const mainCharacter: Array<Entity> = [
 ]
 const effectEntities: Array<Entity> = []
 
-const cameraX = -100
-let cameraY = -300
+let cameraX = 0
+let cameraY = 0
 
 type Props = { width: number, height: number }
 
@@ -127,20 +127,26 @@ export default class Game extends Component<Props> {
 	props: Props
 
 	getCameraBounds = () => ({
-		x: mainCharacter[0].x + cameraX,
-		y: mainCharacter[0].y + cameraY,
+		x: (mainCharacter[0].x - (this.props.width / 2)) + cameraX,
+		y: (mainCharacter[0].y - (this.props.height / 2)) + cameraY,
 		width: this.props.width,
 		height: this.props.height,
 	})
 
 	camera = () => {
 		if (isUpPressed(keys, gamePad)) {
-			// look up
-			cameraY = cameraY - 1 > -this.props.height + mainCharacter[0].height ? cameraY - 1 : cameraY
+			cameraY = cameraY - 2 > (-this.props.height / 2) + mainCharacter[0].height ? cameraY - 2 : cameraY
+		} else if (isDownPressed(keys, gamePad)) {
+			cameraY = cameraY + 2 < (this.props.height / 2) ? cameraY + 2 : cameraY
+		} else {
+			cameraY *= 0.9
 		}
-		if (isDownPressed(keys, gamePad)) {
-			// look down
-			cameraY = cameraY + 1 < 0 ? cameraY + 1 : cameraY
+		if (mainCharacter[0].velocityX > 2) {
+			cameraX = cameraX + 2 < (this.props.width / 2) ? cameraX + 2 : cameraX
+		} else if (mainCharacter[0].velocityX < -2) {
+			cameraX = cameraX - 2 > (-this.props.width / 2) + mainCharacter[0].width ? cameraX - 2 : cameraX
+		} else {
+			cameraX *= 0.98
 		}
 		document.getElementById('keyboard').innerHTML = some(keys, key => key) ?
 			`Keyboard: ${
