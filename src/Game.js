@@ -3,10 +3,18 @@
 import React, { Component } from 'react'
 import { map, some } from 'lodash'
 import { drawRelatively } from './camera'
-import { nextState, nextAccelerationX, isInsideBounds, getDimensions } from './entityUtils'
+import { nextState, isInsideBounds, getDimensions } from './entityUtils'
 import * as EntityTypes from './entityTypes'
 import type { Entity } from './flowTypes'
-import { getGamePadButtonNames } from './gamePadUtils'
+import {
+	getGamePadButtonNames,
+	isLeftPressed,
+	isRightPressed,
+	isUpPressed,
+	isDownPressed,
+	isJumpPressed,
+	isRunPressed,
+} from './controllerUtils'
 import { setCanvasOptions } from './canvasUtils'
 import styles from './App.css'
 
@@ -126,11 +134,11 @@ export default class Game extends Component<Props> {
 	})
 
 	camera = () => {
-		if (keys.w || (gamePad && gamePad.buttons[12].pressed)) {
+		if (isUpPressed(keys, gamePad)) {
 			// look up
 			cameraY = cameraY - 1 > -this.props.height + mainCharacter[0].height ? cameraY - 1 : cameraY
 		}
-		if (keys.s || (gamePad && gamePad.buttons[13].pressed)) {
+		if (isDownPressed(keys, gamePad)) {
 			// look down
 			cameraY = cameraY + 1 < 0 ? cameraY + 1 : cameraY
 		}
@@ -161,16 +169,16 @@ export default class Game extends Component<Props> {
 	}
 
 	game = () => {
-		if (keys.w || (gamePad && gamePad.buttons[12].pressed)) {
+		if (isUpPressed(keys, gamePad)) {
 			// look up
 		}
-		if (keys.s || (gamePad && gamePad.buttons[13].pressed)) {
+		if (isDownPressed(keys, gamePad)) {
 			// duck
 		}
-		if (keys.a || (gamePad && gamePad.buttons[14].pressed)) {
+		if (isLeftPressed(keys, gamePad)) {
 			// walk left
 			mainCharacter[0].velocityX = -mainCharacter[0].maxVelocityX
-		} else if (keys.d || (gamePad && gamePad.buttons[15].pressed)) {
+		} else if (isRightPressed(keys, gamePad)) {
 			// walk right
 			mainCharacter[0].velocityX = mainCharacter[0].maxVelocityX
 		} else if (mainCharacter[0].velocityX < 0.0001) {
@@ -178,12 +186,12 @@ export default class Game extends Component<Props> {
 		} else {
 			mainCharacter[0].velocityX *= 0.5
 		}
-		if (keys.j || (gamePad && gamePad.buttons[0].pressed)) {
+		if (isJumpPressed(keys, gamePad)) {
 			// jump
 			mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
 			mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
 		}
-		if (keys.k || (gamePad && gamePad.buttons[1].pressed)) {
+		if (isRunPressed(keys, gamePad)) {
 			// run
 			mainCharacter[0].maxVelocityX = 6
 		} else {
