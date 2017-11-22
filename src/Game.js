@@ -194,10 +194,10 @@ export default class Game extends Component<Props> {
 		} else if (isRightPressed(keys, gamePad)) {
 			// walk right
 			mainCharacter[0].velocityX = mainCharacter[0].maxVelocityX
-		} else if (mainCharacter[0].velocityX < 0.0001) {
+		} else if (mainCharacter[0].velocityX < 0.0001 && mainCharacter[0].velocityX > -0.0001) {
 			mainCharacter[0].velocityX = 0
 		} else {
-			mainCharacter[0].velocityX *= 0.5
+			mainCharacter[0].velocityX *= 0.8
 		}
 		if (isJumpPressed(keys, gamePad)) {
 			// jump
