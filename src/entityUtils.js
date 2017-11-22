@@ -133,6 +133,7 @@ export const nextState = (entity: Entity, entityIndex: number, entities: Array<E
 				// entity collided with top side of collidedEntity
 				entity.y = topCollidedEntity.y - entity.height
 				entity.velocityY = 0
+				entity.isStanding = true
 			} else {
 				const bottomCollidedEntity = collidedEntities.find(({ y, height }) => y + height <= entity.y)
 				if (bottomCollidedEntity && getObstacleState(entity, bottomCollidedEntity).isObstacleBottom) {

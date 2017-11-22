@@ -31,6 +31,7 @@ const backgroundEntities: Array<Entity> = [
 		velocityX: 0,
 		velocityY: 0,
 		isObstacle: false,
+		isStanding: false,
 		x: -10,
 		y: -10,
 	},
@@ -82,6 +83,7 @@ const mainCharacter: Array<Entity> = [
 		maxVelocityY: 12,
 		maxAccelerationX: 0.2,
 		maxAccelerationY: 0.9,
+		isStanding: false,
 		isObstacle: true,
 	},
 ]
@@ -194,8 +196,12 @@ export default class Game extends Component<Props> {
 		}
 		if (isJumpPressed(keys, gamePad)) {
 			// jump
-			mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
-			mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
+
+			if (mainCharacter[0].isStanding) {
+				mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
+				mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
+				mainCharacter[0].isStanding = false
+			}
 		}
 		if (isRunPressed(keys, gamePad)) {
 			// run
