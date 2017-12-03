@@ -36,6 +36,8 @@ const backgroundEntities: Array<Entity> = [
 		y: -10,
 	},
 ]
+
+/* eslint-disable max-len */
 const indestructibleEntities: Array<Entity> = [
 	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 0, y: 400, accelerationX: 0, accelerationY: 0, maxAccelerationX: 0, maxAccelerationY: 0, maxVelocityX: 0, maxVelocityY: 0, velocityX: 0, velocityY: 0, isStanding: false },
 	{ type: EntityTypes.BLOCK_2, ...getDimensions(EntityTypes.BLOCK_2), isObstacle: true, x: 50, y: 400, accelerationX: 0, accelerationY: 0, maxAccelerationX: 0, maxAccelerationY: 0, maxVelocityX: 0, maxVelocityY: 0, velocityX: 0, velocityY: 0, isStanding: false },
@@ -71,6 +73,7 @@ const indestructibleEntities: Array<Entity> = [
 	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 490, y: 600, accelerationX: 0, accelerationY: 0, maxAccelerationX: 0, maxAccelerationY: 0, maxVelocityX: 0, maxVelocityY: 0, velocityX: 0, velocityY: 0, isStanding: false },
 	{ type: EntityTypes.BLOCK_1, ...getDimensions(EntityTypes.BLOCK_1), isObstacle: true, x: 510, y: 620, accelerationX: 0, accelerationY: 0, maxAccelerationX: 0, maxAccelerationY: 0, maxVelocityX: 0, maxVelocityY: 0, velocityX: 0, velocityY: 0, isStanding: false },
 ]
+/* eslint-enable */
 
 const destructibleEntities: Array<Entity> = []
 const enemyEntities: Array<Entity> = []
@@ -157,6 +160,7 @@ export default class Game extends Component<Props> {
 		} else {
 			cameraX *= 0.98
 		}
+		// $FlowFixMe
 		document.getElementById('keyboard').innerHTML = some(keys, key => key) ?
 			`Keyboard: ${
 				map(
@@ -169,6 +173,7 @@ export default class Game extends Component<Props> {
 				)
 			}` :
 			''
+		// $FlowFixMe
 		document.getElementById('gamepad').innerHTML = gamePad && some(gamePad.buttons, ({ pressed }) => pressed) ?
 			`GamePad: ${
 				gamePad.buttons.map(
@@ -180,6 +185,8 @@ export default class Game extends Component<Props> {
 				)
 			}` :
 			''
+
+		// $FlowFixMe
 		document.getElementById('mainCharacter').innerHTML = JSON.stringify(mainCharacter[0], undefined, 4)
 	}
 
