@@ -97,6 +97,8 @@ const effectEntities: Array<Entity> = []
 let cameraX = 0
 let cameraY = 0
 
+let tick = 0
+
 type Props = { width: number, height: number }
 
 let gamePad = null
@@ -182,6 +184,8 @@ export default class Game extends Component<Props> {
 	}
 
 	game = () => {
+		tick++
+
 		if (isUpPressed(keys, gamePad)) {
 			// look up
 		}
@@ -240,6 +244,7 @@ export default class Game extends Component<Props> {
 		].forEach(([context, entities]) => {
 			if (context) {
 				drawRelatively(
+					tick,
 					context,
 					entities,
 					this.props.width,

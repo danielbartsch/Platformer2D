@@ -185,7 +185,7 @@ const draw = (context, x, y, width, height, color = '#ffa') => {
 	context.fill()
 }
 
-export const drawEntity = (context: CanvasRenderingContext2D, entity: Entity, x: number, y: number) => {
+export const drawEntity = (tick: number, context: CanvasRenderingContext2D, entity: Entity, x: number, y: number) => {
 	switch (entity.type) {
 	case EntityTypes.MAIN_CHARACTER: {
 		draw(context, x, y, entity.width, entity.height, '#f33')
