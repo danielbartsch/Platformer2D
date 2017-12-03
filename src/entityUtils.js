@@ -148,6 +148,7 @@ export const nextState = (entity: Entity, entityIndex: number, entities: Array<E
 
 			return
 		}
+		entity.isStanding = false
 	}
 
 	entity.velocityX = intendedVelocityX
