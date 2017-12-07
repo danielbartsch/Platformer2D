@@ -30,3 +30,4 @@ export const isUpPressed: isPressedFunction = (keys, gamePad) => keys.w || (!!ga
 export const isDownPressed: isPressedFunction = (keys, gamePad) => keys.s || (!!gamePad && gamePad.buttons[13].pressed)
 export const isJumpPressed: isPressedFunction = (keys, gamePad) => keys.j || (!!gamePad && gamePad.buttons[0].pressed)
 export const isRunPressed: isPressedFunction = (keys, gamePad) => keys.k || (!!gamePad && gamePad.buttons[1].pressed)
+export const isMenuPressed: isPressedFunction = (keys, gamePad) => keys.Escape || (!!gamePad && gamePad.buttons[9].pressed) // eslint-disable-line max-len

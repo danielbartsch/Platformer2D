@@ -14,7 +14,9 @@ import {
 	isDownPressed,
 	isJumpPressed,
 	isRunPressed,
+	isMenuPressed,
 } from './controllerUtils'
+import { renderMenu } from './menuUtils'
 import { setCanvasOptions } from './canvasUtils'
 import styles from './App.css'
 
@@ -96,11 +98,22 @@ const mainCharacter: Array<Entity> = [
 	},
 ]
 const effectEntities: Array<Entity> = []
+const foreGroundEntities: Array<Entity> = []
+const menuEntities = []
 
 let cameraX = 0
 let cameraY = 0
 
 let tick = 0
+
+let isPaused = false
+
+const pauseMenuItems = [
+	{ text: 'Resume', style: 'BlanchedAlmond', font: '23px Lucida Console', onActivate: () => { isPaused = false } },
+	{ text: 'Levels', style: 'BlanchedAlmond', font: '23px Lucida Console', onActivate: () => {} }, // nothing just yet
+	{ text: 'Restart', style: 'BlanchedAlmond', font: '23px Lucida Console', onActivate: () => {} }, // reload level
+]
+let selectedPauseMenuItemIndex = 0
 
 type Props = { width: number, height: number }
 
@@ -132,6 +145,8 @@ export default class Game extends Component<Props> {
 	canvasEnemiesContext: ?CanvasRenderingContext2D
 	canvasMainCharContext: ?CanvasRenderingContext2D
 	canvasEffectsContext: ?CanvasRenderingContext2D
+	canvasForegroundContext: ?CanvasRenderingContext2D
+	canvasMenuContext: ?CanvasRenderingContext2D
 	drawInterval: number
 	gameInterval: number
 	cameraInterval: number
@@ -146,19 +161,21 @@ export default class Game extends Component<Props> {
 	})
 
 	camera = () => {
-		if (isUpPressed(keys, gamePad)) {
-			cameraY = cameraY - 2 > (-this.props.height / 2) + mainCharacter[0].height ? cameraY - 2 : cameraY
-		} else if (isDownPressed(keys, gamePad)) {
-			cameraY = cameraY + 2 < (this.props.height / 2) ? cameraY + 2 : cameraY
-		} else {
-			cameraY *= 0.9
-		}
-		if (mainCharacter[0].velocityX > 2) {
-			cameraX = cameraX + 2 < (this.props.width / 2) ? cameraX + 2 : cameraX
-		} else if (mainCharacter[0].velocityX < -2) {
-			cameraX = cameraX - 2 > (-this.props.width / 2) + mainCharacter[0].width ? cameraX - 2 : cameraX
-		} else {
-			cameraX *= 0.98
+		if (!isPaused) {
+			if (isUpPressed(keys, gamePad)) {
+				cameraY = cameraY - 2 > (-this.props.height / 2) + mainCharacter[0].height ? cameraY - 2 : cameraY
+			} else if (isDownPressed(keys, gamePad)) {
+				cameraY = cameraY + 2 < (this.props.height / 2) ? cameraY + 2 : cameraY
+			} else {
+				cameraY *= 0.9
+			}
+			if (mainCharacter[0].velocityX > 2) {
+				cameraX = cameraX + 2 < (this.props.width / 2) ? cameraX + 2 : cameraX
+			} else if (mainCharacter[0].velocityX < -2) {
+				cameraX = cameraX - 2 > (-this.props.width / 2) + mainCharacter[0].width ? cameraX - 2 : cameraX
+			} else {
+				cameraX *= 0.98
+			}
 		}
 		// $FlowFixMe
 		document.getElementById('keyboard').innerHTML = some(keys, key => key) ?
@@ -191,51 +208,63 @@ export default class Game extends Component<Props> {
 	}
 
 	game = () => {
-		tick++
-
-		if (isUpPressed(keys, gamePad)) {
-			// look up
+		if (isMenuPressed(keys, gamePad)) {
+			isPaused = true
 		}
-		if (isDownPressed(keys, gamePad)) {
-			// duck
-		}
-		if (isLeftPressed(keys, gamePad)) {
-			// walk left
-			mainCharacter[0].velocityX = -mainCharacter[0].maxVelocityX
-		} else if (isRightPressed(keys, gamePad)) {
-			// walk right
-			mainCharacter[0].velocityX = mainCharacter[0].maxVelocityX
-		} else if (mainCharacter[0].velocityX < 0.1 && mainCharacter[0].velocityX > -0.1) {
-			mainCharacter[0].velocityX = 0
-		} else {
-			mainCharacter[0].velocityX *= 0.8
-		}
-		if (isJumpPressed(keys, gamePad)) {
-			// jump
-
-			if (mainCharacter[0].isStanding) {
-				mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
-				mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
-				mainCharacter[0].isStanding = false
+		if (isPaused) {
+			if (isUpPressed(keys, gamePad) && selectedPauseMenuItemIndex - 1 >= 0) {
+				selectedPauseMenuItemIndex--
+			} else if (isDownPressed(keys, gamePad) && selectedPauseMenuItemIndex + 1 <= pauseMenuItems.length - 1) {
+				selectedPauseMenuItemIndex++
+			} else if (isJumpPressed(keys, gamePad)) {
+				pauseMenuItems[selectedPauseMenuItemIndex].onActivate()
 			}
-		}
-		if (isRunPressed(keys, gamePad)) {
-			// run
-			mainCharacter[0].maxVelocityX = 6
 		} else {
-			mainCharacter[0].maxVelocityX = 3
-		}
+			if (isUpPressed(keys, gamePad)) {
+				// look up
+			}
+			if (isDownPressed(keys, gamePad)) {
+				// duck
+			}
+			if (isLeftPressed(keys, gamePad)) {
+				// walk left
+				mainCharacter[0].velocityX = -mainCharacter[0].maxVelocityX
+			} else if (isRightPressed(keys, gamePad)) {
+				// walk right
+				mainCharacter[0].velocityX = mainCharacter[0].maxVelocityX
+			} else if (mainCharacter[0].velocityX < 0.1 && mainCharacter[0].velocityX > -0.1) {
+				mainCharacter[0].velocityX = 0
+			} else {
+				mainCharacter[0].velocityX *= 0.8
+			}
+			if (isJumpPressed(keys, gamePad)) {
+				// jump
 
-		const { x, y, width, height } = this.getCameraBounds()
+				if (mainCharacter[0].isStanding) {
+					mainCharacter[0].accelerationY = mainCharacter[0].maxAccelerationY
+					mainCharacter[0].velocityY = -mainCharacter[0].maxVelocityY
+					mainCharacter[0].isStanding = false
+				}
+			}
+			if (isRunPressed(keys, gamePad)) {
+				// run
+				mainCharacter[0].maxVelocityX = 6
+			} else {
+				mainCharacter[0].maxVelocityX = 3
+			}
 
-		backgroundEntities.concat(
-			indestructibleEntities,
-			destructibleEntities,
-			enemyEntities,
-			effectEntities,
-			mainCharacter,
-		)
-			.forEach(nextState)
+			tick++
+
+			const { x, y, width, height } = this.getCameraBounds()
+
+			backgroundEntities.concat(
+				indestructibleEntities,
+				destructibleEntities,
+				enemyEntities,
+				effectEntities,
+				mainCharacter,
+				foreGroundEntities,
+			)
 				.filter(entity => isInsideBounds(
 					entity,
 					{
@@ -245,32 +274,64 @@ export default class Game extends Component<Props> {
 						height: height + 40,
 					}
 				))
+				.forEach(nextState)
+		}
 	}
 
 	draw = () => {
-		const { x, y, width, height } = this.getCameraBounds();
-		[
-			[this.canvasBackgroundContext, backgroundEntities],
-			[this.canvasIndestructiblesContext, indestructibleEntities],
-			[this.canvasDestructiblesContext, destructibleEntities],
-			[this.canvasEnemiesContext, enemyEntities],
-			[this.canvasMainCharContext, mainCharacter],
-			[this.canvasEffectsContext, effectEntities],
-		].forEach(([context, entities]) => {
+		if (isPaused) {
+			const context = this.canvasMenuContext
 			if (context) {
-				drawRelatively(
-					tick,
+				context.clearRect(0, 0, this.props.width, this.props.height)
+
+				renderMenu(
 					context,
-					entities,
-					this.props.width,
-					this.props.height,
-					width,
-					height,
-					x,
-					y,
+					{
+						x: this.props.width / 6,
+						y: this.props.height / 6,
+						width: this.props.width / 1.5,
+						height: this.props.height / 1.5,
+					},
+					'rgba(0,0,0,0.7)',
+					'Paused',
+					'rgba(255,255,255,0.5)',
+					'46px Lucida Console',
+					pauseMenuItems.map((item, index) => ({
+						...item,
+						isSelected: index === selectedPauseMenuItemIndex,
+					})),
 				)
 			}
-		})
+		} else {
+			if (this.canvasMenuContext) {
+				this.canvasMenuContext.clearRect(0, 0, this.props.width, this.props.height)
+			}
+			const { x, y, width, height } = this.getCameraBounds();
+			[
+				[this.canvasBackgroundContext, backgroundEntities],
+				[this.canvasIndestructiblesContext, indestructibleEntities],
+				[this.canvasDestructiblesContext, destructibleEntities],
+				[this.canvasEnemiesContext, enemyEntities],
+				[this.canvasMainCharContext, mainCharacter],
+				[this.canvasEffectsContext, effectEntities],
+				[this.canvasForegroundContext, foreGroundEntities],
+				[this.canvasMenuContext, menuEntities],
+			].forEach(([context, entities]) => {
+				if (context) {
+					drawRelatively(
+						tick,
+						context,
+						entities,
+						this.props.width,
+						this.props.height,
+						width,
+						height,
+						x,
+						y,
+					)
+				}
+			})
+		}
 	}
 
 	componentDidMount() {
@@ -348,6 +409,28 @@ export default class Game extends Component<Props> {
 					}}
 				>
                     Effects Canvas
+				</canvas>
+				<canvas
+					className={styles.canvas}
+					width={width}
+					height={height}
+					ref={ref => {
+						this.canvasForegroundContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasForegroundContext)
+					}}
+				>
+                    Foreground Canvas
+				</canvas>
+				<canvas
+					className={styles.canvas}
+					width={width}
+					height={height}
+					ref={ref => {
+						this.canvasMenuContext = ref && ref.getContext('2d')
+						setCanvasOptions(this.canvasMenuContext)
+					}}
+				>
+                    Menu Canvas
 				</canvas>
 				<div className={styles.pressedKeys}>
 					<span id="keyboard" /><br />
