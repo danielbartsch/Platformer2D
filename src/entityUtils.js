@@ -1,10 +1,10 @@
 // @flow
 
 import { isNil } from 'lodash'
-import type { Entity, EntityType } from './flowTypes'
+import type { Bounds, Entity, EntityType } from './flowTypes'
 import * as EntityTypes from './entityTypes'
 
-export const isInsideBounds = (entity: Entity, x: number, y: number, width: number, height: number): boolean => (
+export const isInsideBounds = (entity: Entity, { x, y, width, height }: Bounds): boolean => (
 	(
 		entity.x + entity.width >= x &&
 		entity.y + entity.height >= y &&
@@ -107,7 +107,15 @@ export const nextState = (entity: Entity, entityIndex: number, entities: Array<E
 		const collidedEntities = entities.filter((otherEntity, index) =>
 			otherEntity.isObstacle &&
 			index !== entityIndex &&
-			isInsideBounds(otherEntity, intendedPositionX, intendedPositionY, entity.width, entity.height)
+			isInsideBounds(
+				otherEntity,
+				{
+					x: intendedPositionX,
+					y: intendedPositionY,
+					width: entity.width,
+					height: entity.height,
+				}
+			)
 		)
 
 		if (collidedEntities.length > 0) {

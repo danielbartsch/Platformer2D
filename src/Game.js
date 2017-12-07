@@ -5,7 +5,7 @@ import { map, some } from 'lodash'
 import { drawRelatively } from './camera'
 import { nextState, isInsideBounds, getDimensions } from './entityUtils'
 import * as EntityTypes from './entityTypes'
-import type { Entity } from './flowTypes'
+import type { Entity, Bounds } from './flowTypes'
 import {
 	getGamePadButtonNames,
 	isLeftPressed,
@@ -138,7 +138,7 @@ export default class Game extends Component<Props> {
 
 	props: Props
 
-	getCameraBounds = () => ({
+	getCameraBounds = (): Bounds => ({
 		x: (mainCharacter[0].x - (this.props.width / 2)) + cameraX,
 		y: (mainCharacter[0].y - (this.props.height / 2)) + cameraY,
 		width: this.props.width,
@@ -235,8 +235,16 @@ export default class Game extends Component<Props> {
 			effectEntities,
 			mainCharacter,
 		)
-			.filter(entity => isInsideBounds(entity, x - 20, y - 20, width + 40, height + 40))
 			.forEach(nextState)
+				.filter(entity => isInsideBounds(
+					entity,
+					{
+						x: x - 20,
+						y: y - 20,
+						width: width + 40,
+						height: height + 40,
+					}
+				))
 	}
 
 	draw = () => {

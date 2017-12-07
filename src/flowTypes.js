@@ -2,12 +2,17 @@
 
 import * as EntityTypes from './entityTypes'
 
+export type Bounds = {
+	x: number, // leftmost point
+	y: number, // topmost point
+	width: number,
+	height: number,
+}
+
 export type EntityType = $Keys<typeof EntityTypes>
 
-export type Entity = {
+export type Entity = Bounds & {
 	type: EntityType,
-	x: number, // must be leftMost point of entity
-	y: number, // must be topMost point of entity
 	velocityX: number,
 	velocityY: number,
 	accelerationX: number,
@@ -18,6 +23,4 @@ export type Entity = {
 	maxAccelerationY: number,
 	isObstacle: boolean,
 	isStanding: boolean,
-	width: number,
-	height: number,
 }
