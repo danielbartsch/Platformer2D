@@ -20,7 +20,13 @@ export const drawRelatively = (
 	context.strokeRect(0, 0, drawWidth, drawHeight) // camera view area
 	entities.forEach(entity => {
 		if (isInsideBounds(entity, { x, y, width: drawWidth, height: drawHeight })) {
-			drawEntity(tick, context, entity, entity.x - x, entity.y - y)
+			drawEntity(
+				tick,
+				context,
+				entity,
+				(entity.x - x) * (entity.parallaxFactorX || 1),
+				(entity.y - y) * (entity.parallaxFactorY || 1),
+			)
 		}
 	})
 }

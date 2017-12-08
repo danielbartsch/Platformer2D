@@ -177,7 +177,7 @@ export const getDimensions = (type: EntityType): {| height: number, width: numbe
 	case EntityTypes.PLATFORM:
 		return { height: 10, width: 80 }
 	case EntityTypes.BACKGROUND:
-		return { height: 100, width: 100 }
+		return { height: 1000, width: 10000 }
 	default:
 		return { height: 0, width: 0 }
 	}
@@ -213,7 +213,17 @@ export const drawEntity = (tick: number, context: CanvasRenderingContext2D, enti
 		break
 	}
 	case EntityTypes.BACKGROUND: {
-		draw(context, x, y, entity.width, entity.height, '#020')
+		context.beginPath()
+		context.moveTo(x + entity.width, y)
+		context.lineTo(x + entity.width, y + entity.height)
+		context.lineTo(x, y + entity.height)
+		for (let i = 0; i < entity.width;) {
+			for (let j = 0; j < 2; j++, i += 200) {
+				context.lineTo(x + i, y + (j * 100))
+			}
+		}
+		context.fillStyle = '#020'
+		context.fill()
 		break
 	}
 	}

@@ -23,4 +23,6 @@ export type Entity = Bounds & {
 	maxAccelerationY: number,
 	isObstacle: boolean,
 	isStanding: boolean,
+	parallaxFactorX?: number,
+	parallaxFactorY?: number,
 }
