@@ -48,6 +48,8 @@ const pauseMenuItems = [
 		style: 'BlanchedAlmond',
 		font: '23px Lucida Console',
 		onActivate: () => {
+			cameraX = 0
+			cameraY = 0
 			isPaused = false
 			level = require('./levels/test').default() // eslint-disable-line global-require
 		},
