@@ -20,6 +20,14 @@
         "import",
         "flowtype"
     ],
+	"overrides": [
+    	{
+      		"files": [ "src/levels/**/*.js" ],
+      		"rules": {
+        		"max-len": ["off"]
+      		}
+    	}
+  	],
     "rules": {
         "max-len": [1, { "code": 120, "tabWidth": 4, "ignoreComments": true }],
         "linebreak-style": ["error", "unix"],
