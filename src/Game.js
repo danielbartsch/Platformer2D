@@ -26,7 +26,13 @@ let cameraY = 0
 
 let tick = 0
 
-let level = require('./levels/test').default()
+// $FlowFixMe
+const req = require.context('./levels/', false, /^(.*\.(js$))[^.]*$/igm)
+const levels = req.keys()
+
+let currentLevel = 0
+
+let level = req(levels[currentLevel]).default()
 
 let isPaused = false
 
@@ -38,10 +44,15 @@ const pauseMenuItems = [
 		onActivate: () => { isPaused = false },
 	},
 	{
-		text: 'Levels',
+		text: 'Next level',
 		style: 'BlanchedAlmond',
 		font: '23px Lucida Console',
-		onActivate: () => {}, // nothing just yet
+		onActivate: canvasContexts => {
+			cameraX = 0
+			cameraY = 0
+			isPaused = false
+			level = req(levels[++currentLevel % levels.length]).default() // eslint-disable-line global-require
+		},
 	},
 	{
 		text: 'Restart',
@@ -51,7 +62,7 @@ const pauseMenuItems = [
 			cameraX = 0
 			cameraY = 0
 			isPaused = false
-			level = require('./levels/test').default() // eslint-disable-line global-require
+			level = req(levels[currentLevel % levels.length]).default() // eslint-disable-line global-require
 		},
 	},
 ]
@@ -178,10 +189,8 @@ export default class Game extends Component<Props> {
 				// duck
 			}
 			if (isLeftPressed(keys, gamePad)) {
-				// walk left
 				level.mainCharacter[0].velocityX = -level.mainCharacter[0].maxVelocityX
 			} else if (isRightPressed(keys, gamePad)) {
-				// walk right
 				level.mainCharacter[0].velocityX = level.mainCharacter[0].maxVelocityX
 			} else if (level.mainCharacter[0].velocityX < 0.1 && level.mainCharacter[0].velocityX > -0.1) {
 				level.mainCharacter[0].velocityX = 0
@@ -189,8 +198,6 @@ export default class Game extends Component<Props> {
 				level.mainCharacter[0].velocityX *= 0.8
 			}
 			if (isJumpPressed(keys, gamePad)) {
-				// jump
-
 				if (level.mainCharacter[0].isStanding) {
 					level.mainCharacter[0].accelerationY = level.mainCharacter[0].maxAccelerationY
 					level.mainCharacter[0].velocityY = -level.mainCharacter[0].maxVelocityY
