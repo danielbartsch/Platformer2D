@@ -51,6 +51,9 @@ const pauseMenuItems = [
 			cameraX = 0
 			cameraY = 0
 			isPaused = false
+
+			canvasContexts.forEach(context => context.clearRect(0, 0, context.canvas.width, context.canvas.height))
+
 			level = req(levels[++currentLevel % levels.length]).default() // eslint-disable-line global-require
 		},
 	},
@@ -179,7 +182,16 @@ export default class Game extends Component<Props> {
 			) {
 				selectedPauseMenuItemIndex++
 			} else if (isJumpPressed(keys, gamePad)) {
-				pauseMenuItems[selectedPauseMenuItemIndex].onActivate()
+				pauseMenuItems[selectedPauseMenuItemIndex].onActivate([
+					this.canvasBackgroundContext,
+					this.canvasIndestructiblesContext,
+					this.canvasDestructiblesContext,
+					this.canvasEnemiesContext,
+					this.canvasMainCharContext,
+					this.canvasEffectsContext,
+					this.canvasForegroundContext,
+					this.canvasMenuContext,
+				])
 			}
 		} else {
 			if (isUpPressed(keys, gamePad)) {

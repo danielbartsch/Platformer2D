@@ -51,7 +51,13 @@ export const renderMenu = (
 	titleText: string,
 	titleStyle: string,
 	titleFont: string,
-	menuItems: Array<{ text: string, style: string, font: string, isSelected: boolean, onActivate: () => void }>,
+	menuItems: Array<{
+		text: string,
+		style: string,
+		font: string,
+		isSelected: boolean,
+		onActivate: (Array<CanvasRenderingContext2D>) => void,
+	}>,
 ) => {
 	context.save()
 	context.beginPath()
