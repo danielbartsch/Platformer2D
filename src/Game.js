@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { map, some } from 'lodash'
+import { map, some, cloneDeep } from 'lodash'
 import { drawRelatively } from './camera'
 import { nextState, isInsideBounds } from './entityUtils'
 import type { Bounds } from './flowTypes'
@@ -61,6 +61,9 @@ type Props = { width: number, height: number }
 
 let gamePad = null
 const keys = {}
+
+let gamePadBefore = null
+let keysBefore = {}
 
 window.addEventListener('gamepadconnected', event => {
 	gamePad = event.gamepad
@@ -150,13 +153,19 @@ export default class Game extends Component<Props> {
 	}
 
 	game = () => {
-		if (isMenuPressed(keys, gamePad)) {
-			isPaused = true
+		if (isMenuPressed(keys, gamePad) && !isMenuPressed(keysBefore, gamePadBefore)) {
+			isPaused = !isPaused
 		}
 		if (isPaused) {
-			if (isUpPressed(keys, gamePad) && selectedPauseMenuItemIndex - 1 >= 0) {
+			if (
+				(isUpPressed(keys, gamePad) && !isUpPressed(keysBefore, gamePadBefore)) &&
+				selectedPauseMenuItemIndex - 1 >= 0
+			) {
 				selectedPauseMenuItemIndex--
-			} else if (isDownPressed(keys, gamePad) && selectedPauseMenuItemIndex + 1 <= pauseMenuItems.length - 1) {
+			} else if (
+				(isDownPressed(keys, gamePad) && !isDownPressed(keysBefore, gamePadBefore)) &&
+				selectedPauseMenuItemIndex + 1 <= pauseMenuItems.length - 1
+			) {
 				selectedPauseMenuItemIndex++
 			} else if (isJumpPressed(keys, gamePad)) {
 				pauseMenuItems[selectedPauseMenuItemIndex].onActivate()
@@ -218,6 +227,8 @@ export default class Game extends Component<Props> {
 				))
 				.forEach(nextState)
 		}
+		keysBefore = cloneDeep(keys)
+		gamePadBefore = cloneDeep(gamePad)
 	}
 
 	draw = () => {
