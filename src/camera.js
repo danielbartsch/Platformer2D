@@ -6,7 +6,7 @@ import { isInsideBounds, drawEntity } from './entityUtils'
 export const drawRelatively = (
 	tick: number,
 	context: CanvasRenderingContext2D,
-	entities: Array<Entity>, // array of all entities to render
+	entities: Array<Entity>, // all entities to render
 	drawWindowWidth: number, // in pixels - whole drawing area
 	drawWindowHeight: number, // in pixels - whole drawing area
 	drawWidth: number, // width range of pixels to draw
@@ -19,7 +19,11 @@ export const drawRelatively = (
 	context.clearRect(0, 0, context.canvas.width, context.canvas.height)
 	context.strokeRect(0, 0, drawWidth, drawHeight) // camera view area
 	entities.forEach(entity => {
-		if (isInsideBounds(entity, { x, y, width: drawWidth, height: drawHeight })) {
+		if (
+			isInsideBounds(entity, { x, y, width: drawWidth, height: drawHeight }) ||
+			(entity.parallaxFactorX && entity.parallaxFactorX !== 1) ||
+			(entity.parallaxFactorY && entity.parallaxFactorY !== 1)
+		) {
 			drawEntity(
 				tick,
 				context,
