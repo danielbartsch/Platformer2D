@@ -24,6 +24,9 @@ const menuEntities = []
 let cameraX = 0
 let cameraY = 0
 
+let cameraXTarget = 0
+let cameraYTarget = 0
+
 let tick = 0
 
 // $FlowFixMe
@@ -113,8 +116,8 @@ export default class Game extends Component<Props> {
 	props: Props
 
 	getCameraBounds = (): Bounds => ({
-		x: (level.mainCharacter[0].x - (this.props.width / 2)) + cameraX,
-		y: (level.mainCharacter[0].y - (this.props.height / 2)) + cameraY,
+		x: cameraX,
+		y: cameraY,
 		width: this.props.width,
 		height: this.props.height,
 	})
@@ -122,18 +125,25 @@ export default class Game extends Component<Props> {
 	camera = () => {
 		if (!isPaused) {
 			if (isUpPressed(keys, gamePad)) {
-				cameraY = cameraY - 2 > (-this.props.height / 2) + level.mainCharacter[0].height ? cameraY - 2 : cameraY
+				const cameraTargetY = cameraYTarget - ((this.props.height / 2) - level.mainCharacter[0].height)
+				cameraY += (cameraTargetY - cameraY) * (level.mainCharacter[0].maxVelocityY / 200)
 			} else if (isDownPressed(keys, gamePad)) {
-				cameraY = cameraY + 2 < (this.props.height / 2) ? cameraY + 2 : cameraY
+				const cameraTargetY = cameraYTarget + (this.props.height / 2)
+				cameraY += (cameraTargetY - cameraY) * (level.mainCharacter[0].maxVelocityY / 200)
+			} else if (cameraYTarget > cameraY) {
+				// falling
+				cameraY += (cameraYTarget - cameraY) * (level.mainCharacter[0].maxVelocityY / 125)
 			} else {
-				cameraY *= 0.9
+				cameraY += (cameraYTarget - cameraY) * (level.mainCharacter[0].maxVelocityY / 200)
 			}
 			if (level.mainCharacter[0].velocityX > 2) {
-				cameraX = cameraX + 2 < (this.props.width / 2) ? cameraX + 2 : cameraX
+				cameraXTarget = (level.mainCharacter[0].x - (this.props.width / 2)) + (this.props.width / 3)
+				cameraX += (cameraXTarget - cameraX) * (level.mainCharacter[0].maxVelocityX / 150)
 			} else if (level.mainCharacter[0].velocityX < -2) {
-				cameraX = cameraX - 2 > (-this.props.width / 2) + level.mainCharacter[0].width ? cameraX - 2 : cameraX
+				cameraXTarget = (level.mainCharacter[0].x - (this.props.width / 2)) - (this.props.width / 3)
+				cameraX += (cameraXTarget - cameraX) * (level.mainCharacter[0].maxVelocityX / 150)
 			} else {
-				cameraX *= 0.98
+				cameraX += (cameraXTarget - cameraX) * (level.mainCharacter[0].maxVelocityX / 100)
 			}
 		}
 		// $FlowFixMe
@@ -164,6 +174,8 @@ export default class Game extends Component<Props> {
 
 		// $FlowFixMe
 		document.getElementById('mainCharacter').innerHTML = JSON.stringify(level.mainCharacter[0], undefined, 4)
+		// $FlowFixMe
+		document.getElementById('camera').innerHTML = `cameraX: ${cameraX}\ncameraY: ${cameraY}\ncameraTargetX: ${cameraXTarget}\ncameraTargetY: ${cameraYTarget}`
 	}
 
 	game = () => {
@@ -245,6 +257,9 @@ export default class Game extends Component<Props> {
 					}
 				))
 				.forEach(nextState)
+
+			cameraXTarget = level.mainCharacter[0].x - (this.props.width / 2)
+			cameraYTarget = level.mainCharacter[0].y - (this.props.height / 2)
 		}
 		keysBefore = cloneDeep(keys)
 		gamePadBefore = cloneDeep(gamePad)
@@ -407,6 +422,7 @@ export default class Game extends Component<Props> {
 				<div className={styles.pressedKeys}>
 					<span id="keyboard" /><br />
 					<span id="gamepad" />
+					<pre style={{ top: 560, position: 'relative', left: 200 }} id="camera" />
 					<pre style={{ top: 560, position: 'relative' }} id="mainCharacter" />
 				</div>
 			</div>
