@@ -173,8 +173,6 @@ export default class Game extends Component<Props> {
 			''
 
 		// $FlowFixMe
-		document.getElementById('mainCharacter').innerHTML = JSON.stringify(level.mainCharacter[0], undefined, 4)
-		// $FlowFixMe
 		document.getElementById('camera').innerHTML = `cameraX: ${cameraX}\ncameraY: ${cameraY}\ncameraTargetX: ${cameraXTarget}\ncameraTargetY: ${cameraYTarget}`
 	}
 
@@ -423,7 +421,6 @@ export default class Game extends Component<Props> {
 					<span id="keyboard" /><br />
 					<span id="gamepad" />
 					<pre style={{ top: 560, position: 'relative', left: 200 }} id="camera" />
-					<pre style={{ top: 560, position: 'relative' }} id="mainCharacter" />
 				</div>
 			</div>
 		)
