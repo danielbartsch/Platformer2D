@@ -116,8 +116,8 @@ export default class Game extends Component<Props> {
 	props: Props
 
 	getCameraBounds = (): Bounds => ({
-		x: cameraX,
-		y: cameraY,
+		x: parseInt(cameraX, 10),
+		y: parseInt(cameraY, 10),
 		width: this.props.width,
 		height: this.props.height,
 	})
