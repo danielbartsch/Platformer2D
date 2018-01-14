@@ -175,7 +175,7 @@ export const getDimensions = (type: EntityType): {| height: number, width: numbe
 	case EntityTypes.BLOCK_2:
 		return { height: 40, width: 40 }
 	case EntityTypes.PLATFORM:
-		return { height: 10, width: 80 }
+		return { height: 20, width: 80 }
 	case EntityTypes.BACKGROUND:
 		return { height: 1000, width: 10000 }
 	default:
@@ -198,18 +198,64 @@ export const drawEntity = (tick: number, context: CanvasRenderingContext2D, enti
 	switch (entity.type) {
 	case EntityTypes.MAIN_CHARACTER: {
 		draw(context, x, y, entity.width, entity.height, '#f33')
+		context.beginPath()
+		if (entity.velocityX > 0) {
+			context.moveTo(x + entity.width, y)
+			context.lineTo(x + (entity.width / 2), y + (entity.width / 2))
+			context.lineTo(x + entity.width, y + entity.width)
+		} else if (entity.velocityX < 0) {
+			context.moveTo(x, y)
+			context.lineTo(x + (entity.width / 2), y + (entity.width / 2))
+			context.lineTo(x, y + entity.width)
+		} else {
+			context.moveTo(x + entity.width, y)
+			context.lineTo(x + (entity.width / 2), y + (entity.width / 2))
+			context.lineTo(x + entity.width, y + entity.width)
+			context.lineTo(x + entity.width, y)
+			context.moveTo(x, y)
+			context.lineTo(x + (entity.width / 2), y + (entity.width / 2))
+			context.lineTo(x, y + entity.width)
+		}
+		context.fillStyle = '#c00'
+		context.fill()
 		break
 	}
 	case EntityTypes.BLOCK_1: {
 		draw(context, x, y, entity.width, entity.height, '#aae')
+		context.beginPath()
+		context.moveTo(x, y)
+		context.lineTo(x + (entity.width / 2), y + (entity.height / 2))
+		context.lineTo(x + entity.width, y)
+		context.fillStyle = '#77b'
+		context.fill()
 		break
 	}
 	case EntityTypes.BLOCK_2: {
 		draw(context, x, y, entity.width, entity.height, '#eaa')
+		context.beginPath()
+		context.moveTo(x, y)
+		context.lineTo(x + (entity.width / 4), y + (entity.height / 4))
+		context.lineTo(x + (entity.width / 2), y)
+		context.lineTo(x + ((entity.width * 3) / 4), y + (entity.height / 4))
+		context.lineTo(x + entity.width, y)
+		context.fillStyle = '#b77'
+		context.fill()
 		break
 	}
 	case EntityTypes.PLATFORM: {
 		draw(context, x, y, entity.width, entity.height, '#aea')
+		context.beginPath()
+		context.moveTo(x, y)
+		context.lineTo(x + ((entity.width * 1) / 8), y + (entity.height / 2))
+		context.lineTo(x + ((entity.width * 2) / 8), y)
+		context.lineTo(x + ((entity.width * 3) / 8), y + (entity.height / 2))
+		context.lineTo(x + ((entity.width * 4) / 8), y)
+		context.lineTo(x + ((entity.width * 5) / 8), y + (entity.height / 2))
+		context.lineTo(x + ((entity.width * 6) / 8), y)
+		context.lineTo(x + ((entity.width * 7) / 8), y + (entity.height / 2))
+		context.lineTo(x + ((entity.width * 8) / 8), y)
+		context.fillStyle = '#7b7'
+		context.fill()
 		break
 	}
 	case EntityTypes.BACKGROUND: {
@@ -222,7 +268,13 @@ export const drawEntity = (tick: number, context: CanvasRenderingContext2D, enti
 				context.lineTo(x + i, y + (j * 100))
 			}
 		}
-		context.fillStyle = '#020'
+		context.fillStyle = '#000'
+		context.strokeStyle = '#222'
+		context.lineWidth = 5
+		context.fill()
+		context.stroke()
+		break
+	}
 		context.fill()
 		break
 	}
