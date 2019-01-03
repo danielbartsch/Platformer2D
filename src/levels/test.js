@@ -167,7 +167,7 @@ export default (): { [entityNames: string]: Array<Entity> } => cloneDeep({
 			maxVelocityX: 3,
 			maxVelocityY: 12,
 			maxAccelerationX: 0.2,
-			maxAccelerationY: 0.9,
+			maxAccelerationY: 2,
 			isStanding: false,
 			isObstacle: true,
 		},

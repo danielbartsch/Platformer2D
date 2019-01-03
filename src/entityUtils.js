@@ -3,6 +3,9 @@
 import { isNil } from 'lodash'
 import type { Bounds, Entity, EntityType } from './flowTypes'
 import * as EntityTypes from './entityTypes'
+import {
+	isJumpPressed, isDownPressed,
+} from './controllerUtils'
 
 export const isInsideBounds = (entity: Entity, { x, y, width, height }: Bounds): boolean => (
 	(
@@ -93,9 +96,23 @@ const nextVelocityY = (entity: Entity): number => {
 }
 
 // mutating
-export const nextState = (entity: Entity, entityIndex: number, entities: Array<Entity>): void => {
+export const nextState = (keys, gamePad, entity: Entity, entityIndex: number, entities: Array<Entity>): void => {
 	entity.accelerationX = nextAccelerationX(0, entity)
-	entity.accelerationY = nextAccelerationY(0, entity)
+	if (entity.type === EntityTypes.MAIN_CHARACTER) {
+		if (entity.velocityY > 0) {
+			if (isDownPressed(keys, gamePad)) {
+				entity.accelerationY = nextAccelerationY(entity.maxAccelerationY / 40, entity)
+			} else {
+				entity.accelerationY = nextAccelerationY(entity.maxAccelerationY / 500, entity)
+			}
+		} else if (isJumpPressed(keys, gamePad)) {
+			entity.accelerationY = nextAccelerationY(entity.maxAccelerationY / 100, entity)
+		} else {
+			entity.accelerationY = nextAccelerationY(entity.maxAccelerationY / 5, entity)
+		}
+	} else {
+		entity.accelerationY = nextAccelerationY(0, entity)
+	}
 
 	const intendedVelocityX = nextVelocityX(entity)
 	const intendedVelocityY = nextVelocityY(entity)

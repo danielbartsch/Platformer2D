@@ -174,8 +174,8 @@ export default class Game extends Component<Props> {
 			}` :
 			''
 
-		// $FlowFixMe
 		document.getElementById('camera').innerHTML = `cameraX: ${cameraX}\ncameraY: ${cameraY}\ncameraTargetX: ${cameraXTarget}\ncameraTargetY: ${cameraYTarget}`
+		document.getElementById('mainCharacter').innerHTML = `character vx: ${level.mainCharacter[0].velocityX}\ncharacter vy: ${level.mainCharacter[0].velocityY}\ncharacter ax: ${level.mainCharacter[0].accelerationX}\ncharacter ay: ${level.mainCharacter[0].accelerationY}`
 	}
 
 	game = () => {
@@ -210,7 +210,7 @@ export default class Game extends Component<Props> {
 				// look up
 			}
 			if (isDownPressed(keys, gamePad)) {
-				// duck
+				// duck, look down
 			}
 			if (isLeftPressed(keys, gamePad)) {
 				level.mainCharacter[0].velocityX = -level.mainCharacter[0].maxVelocityX
@@ -223,7 +223,7 @@ export default class Game extends Component<Props> {
 			}
 			if (isJumpPressed(keys, gamePad)) {
 				if (level.mainCharacter[0].isStanding) {
-					level.mainCharacter[0].accelerationY = level.mainCharacter[0].maxAccelerationY
+					level.mainCharacter[0].accelerationY = level.mainCharacter[0].maxAccelerationY / 10
 					level.mainCharacter[0].velocityY = -level.mainCharacter[0].maxVelocityY
 					level.mainCharacter[0].isStanding = false
 				}
@@ -256,7 +256,7 @@ export default class Game extends Component<Props> {
 						height: height + 40,
 					}
 				))
-				.forEach(nextState)
+				.forEach((...args) => nextState(keys, gamePad, ...args))
 
 			cameraXTarget = level.mainCharacter[0].x - (this.props.width / 2)
 			cameraYTarget = level.mainCharacter[0].y - (this.props.height / 2)
@@ -434,7 +434,9 @@ export default class Game extends Component<Props> {
 					</div>
 					<span id="keyboard" /><br />
 					<span id="gamepad" /><br />
-					<pre style={{ top: 560, position: 'relative', left: 200 }} id="camera" />
+					<pre style={{ top: 600, position: 'absolute', left: 200 }} id="camera" />
+					<pre style={{ top: 600, position: 'absolute', left: 500 }} id="mainCharacter" />
+
 				</div>
 			</div>
 		)
