@@ -14,6 +14,8 @@ import {
 	isJumpPressed,
 	isRunPressed,
 	isMenuPressed,
+	keyboardControls,
+	gamepadControls,
 } from './controllerUtils'
 import { renderMenu } from './menuUtils'
 import { setCanvasOptions } from './canvasUtils'
@@ -418,8 +420,20 @@ export default class Game extends Component<Props> {
                     Menu Canvas
 				</canvas>
 				<div className={styles.pressedKeys}>
+					<div id="keyboardControls" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+						Keyboard: <br />
+						{map(keyboardControls, (buttonName, actionName) =>
+							<div key={actionName}>{actionName}: {buttonName}</div>
+						)}
+					</div>
+					<div id="gamePadControls" style={{ display: 'none' }}>
+						GamePad: <br />
+						{map(gamepadControls, (buttonIndex, actionName) =>
+							<div key={actionName}>{actionName}: {getGamePadButtonNames(buttonIndex)}</div>
+						)}
+					</div>
 					<span id="keyboard" /><br />
-					<span id="gamepad" />
+					<span id="gamepad" /><br />
 					<pre style={{ top: 560, position: 'relative', left: 200 }} id="camera" />
 				</div>
 			</div>

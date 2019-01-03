@@ -258,7 +258,7 @@ export const drawEntity = (tick: number, context: CanvasRenderingContext2D, enti
 		context.fill()
 		break
 	}
-	case EntityTypes.BACKGROUND: {
+	case EntityTypes.BACKGROUND:
 		context.beginPath()
 		context.moveTo(x + entity.width, y)
 		context.lineTo(x + entity.width, y + entity.height)
@@ -274,9 +274,5 @@ export const drawEntity = (tick: number, context: CanvasRenderingContext2D, enti
 		context.fill()
 		context.stroke()
 		break
-	}
-		context.fill()
-		break
-	}
 	}
 }

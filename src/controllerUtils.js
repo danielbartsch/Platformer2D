@@ -1,33 +1,76 @@
 // @flow
 
-export const getGamePadButtonNames = (buttonIndex: number): string => {
-	switch (buttonIndex) {
-	case 0: return 'A'
-	case 1: return 'B'
-	case 2: return 'X'
-	case 3: return 'Y'
-	case 4: return 'Left-Bumper'
-	case 5: return 'Right-Bumper'
-	case 6: return 'Left-Trigger'
-	case 7: return 'Right-Trigger'
-	case 8: return 'View'
-	case 9: return 'Menu'
-	case 10: return 'Left-Stick'
-	case 11: return 'Right-Stick'
-	case 12: return 'D-Pad-Up'
-	case 13: return 'D-Pad-Down'
-	case 14: return 'D-Pad-Left'
-	case 15: return 'D-Pad-Right'
-	default: return 'unknown'
-	}
+// must absolutely be in this order for XBOX One Controller
+const gamePadButtons = [
+	'A',
+	'B',
+	'X',
+	'Y',
+	'Left-Bumper',
+	'Right-Bumper',
+	'Left-Trigger',
+	'Right-Trigger',
+	'View',
+	'Menu',
+	'Left-Stick',
+	'Right-Stick',
+	'D-Pad-Up',
+	'D-Pad-Down',
+	'D-Pad-Left',
+	'D-Pad-Right',
+]
+
+export const getGamePadButtonNames = (buttonIndex: number): string => gamePadButtons[buttonIndex]
+
+const getGamePadButtonIndex = (buttonName: string): number => gamePadButtons.indexOf(buttonName)
+
+export const keyboardControls = {
+	left: 'a',
+	right: 'h',
+	up: 'd',
+	down: 's',
+	jump: 'e',
+	run: 'n',
+	menu: 'Escape',
+}
+
+export const gamepadControls = {
+	left: getGamePadButtonIndex('D-Pad-Left'),
+	right: getGamePadButtonIndex('D-Pad-Right'),
+	up: getGamePadButtonIndex('D-Pad-Up'),
+	down: getGamePadButtonIndex('D-Pad-Down'),
+	jump: getGamePadButtonIndex('A'),
+	run: getGamePadButtonIndex('X'),
+	menu: getGamePadButtonIndex('Menu'),
 }
 
 type isPressedFunction = (keys: { [keyName: string]: boolean }, gamePad: ?Gamepad) => boolean
 
-export const isLeftPressed: isPressedFunction = (keys, gamePad) => keys.a || (!!gamePad && gamePad.buttons[14].pressed)
-export const isRightPressed: isPressedFunction = (keys, gamePad) => keys.d || (!!gamePad && gamePad.buttons[15].pressed)
-export const isUpPressed: isPressedFunction = (keys, gamePad) => keys.w || (!!gamePad && gamePad.buttons[12].pressed)
-export const isDownPressed: isPressedFunction = (keys, gamePad) => keys.s || (!!gamePad && gamePad.buttons[13].pressed)
-export const isJumpPressed: isPressedFunction = (keys, gamePad) => keys.k || (!!gamePad && gamePad.buttons[0].pressed)
-export const isRunPressed: isPressedFunction = (keys, gamePad) => keys.j || (!!gamePad && gamePad.buttons[2].pressed)
-export const isMenuPressed: isPressedFunction = (keys, gamePad) => keys.Escape || (!!gamePad && gamePad.buttons[9].pressed) // eslint-disable-line max-len
+export const isLeftPressed: isPressedFunction = (keys, gamePad) =>
+	keys[keyboardControls.left] ||
+	(!!gamePad && gamePad.buttons[gamepadControls.left].pressed)
+
+export const isRightPressed: isPressedFunction = (keys, gamePad) =>
+	keys[keyboardControls.right] ||
+	(!!gamePad && gamePad.buttons[gamepadControls.right].pressed)
+
+export const isUpPressed: isPressedFunction = (keys, gamePad) =>
+	keys[keyboardControls.up] ||
+	(!!gamePad && gamePad.buttons[gamepadControls.up].pressed)
+
+export const isDownPressed: isPressedFunction = (keys, gamePad) =>
+	keys[keyboardControls.down] ||
+	(!!gamePad && gamePad.buttons[gamepadControls.down].pressed)
+
+export const isJumpPressed: isPressedFunction = (keys, gamePad) =>
+	keys[keyboardControls.jump] ||
+	(!!gamePad && gamePad.buttons[gamepadControls.jump].pressed)
+
+export const isRunPressed: isPressedFunction = (keys, gamePad) =>
+	keys[keyboardControls.run] ||
+	(!!gamePad && gamePad.buttons[gamepadControls.run].pressed)
+
+export const isMenuPressed: isPressedFunction = (keys, gamePad) =>
+	keys[keyboardControls.menu] ||
+	(!!gamePad && gamePad.buttons[gamepadControls.menu].pressed)
+
